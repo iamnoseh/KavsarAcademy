@@ -9,29 +9,27 @@ public class NewsRepository(DataContext context) : INewsRepository
 {
     public async Task<List<News>> GetAllNews()
     {
-        var news = await context.News.ToListAsync();
-        return news;
+        return await context.News.Include(n => n.Likes).ToListAsync();
     }
 
-    public async Task<News> GetNewsById(int id)
+    public async Task<News?> GetNewsById(int id)
     {
-        var news = await context.News.FirstOrDefaultAsync(x=> x.Id == id);
-        return news;
+        return await context.News.Include(n => n.Likes).FirstOrDefaultAsync(n => n.Id == id);
     }
 
-    public async Task<int> CreateNews(News news)
+    public async Task<int> CreateNews(News? news)
     {
         await context.News.AddAsync(news);
         return await context.SaveChangesAsync();
     }
 
-    public async Task<int> UpdateNews(News news)
+    public async Task<int> UpdateNews(News? news)
     {
         context.News.Update(news);
         return await context.SaveChangesAsync();
     }
 
-    public async Task<int> DeleteNews(News news)
+    public async Task<int> DeleteNews(News? news)
     {
         context.News.Remove(news);
         return await context.SaveChangesAsync();

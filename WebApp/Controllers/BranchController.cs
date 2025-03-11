@@ -5,7 +5,7 @@ using Infrastructure.Seed;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers;
+namespace WebApp.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class BranchController (IBranchService service) : Controller

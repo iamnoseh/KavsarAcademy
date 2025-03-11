@@ -13,8 +13,6 @@ namespace Domain.Entities
         public int UserId { get; set; }
         public User User { get; set; } = null!;
 
-        public int LikeCount => Likes?.Count ?? 0;
-
         public int? PatternCommentId { get; set; }  
         [ForeignKey("PatternCommentId")]
         public Comment? PatternComment { get; set; }
@@ -24,7 +22,5 @@ namespace Domain.Entities
         [Required]
         public int NewsId { get; set; }
         public News News { get; set; } = null!;
-
-        public List<Like> Likes { get; set; } = new();
     }
 }

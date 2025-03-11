@@ -19,7 +19,8 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<Course> Courses { get; set; }
     public DbSet<Gallery> Galleries { get; set; }
     public DbSet<Colleague> Colleagues { get; set; }
-
+    public DbSet<VideoReview> VideoReviews { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder); 

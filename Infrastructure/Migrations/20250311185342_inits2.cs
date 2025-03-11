@@ -218,6 +218,26 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "VideoReviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ReviewerNameTj = table.Column<string>(type: "text", nullable: false),
+                    ReviewerNameRu = table.Column<string>(type: "text", nullable: false),
+                    ReviewerNameEn = table.Column<string>(type: "text", nullable: false),
+                    ReviewPath = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoReviews", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -426,8 +446,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    NewsId = table.Column<int>(type: "integer", nullable: true),
-                    CommentId = table.Column<int>(type: "integer", nullable: true)
+                    NewsId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -438,11 +457,6 @@ namespace Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_Comments_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comments",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Likes_News_NewsId",
                         column: x => x.NewsId,
@@ -508,11 +522,6 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Likes_CommentId",
-                table: "Likes",
-                column: "CommentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Likes_NewsId",
                 table: "Likes",
                 column: "NewsId");
@@ -559,6 +568,9 @@ namespace Infrastructure.Migrations
                 name: "Colleagues");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "Courses");
 
             migrationBuilder.DropTable(
@@ -574,10 +586,10 @@ namespace Infrastructure.Migrations
                 name: "Requests");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "VideoReviews");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "News");

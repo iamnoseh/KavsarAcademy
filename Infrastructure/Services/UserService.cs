@@ -41,8 +41,6 @@ public class UserService(
     public async Task<Response<string>> DeleteUserAsync(int id)
     {
         var user = await userRepository.GetByIdAsync(id);
-        if (user == null)
-            return new Response<string>(HttpStatusCode.NotFound, "User not found");
 
         await userRepository.DeleteAsync(user);
         return new Response<string>("User deleted successfully");
@@ -90,7 +88,7 @@ public class UserService(
         return new Response<string>("User updated successfully");
     }
 
-    public async Task<Response<string>> UpdateUserProfileImageAsync(int userId, IFormFile profileImage)
+    public async Task<Response<string>> UpdateUserProfileImageAsync(int userId, IFormFile? profileImage)
     {
         var user = await userRepository.GetByIdAsync(userId);
         if (user == null)

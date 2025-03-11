@@ -10,6 +10,8 @@ using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Interfaces.Account;
 using Infrastructure.Interfaces.Gallery;
+using Infrastructure.Interfaces.LIke;
+using Infrastructure.Interfaces.VideoReview;
 using Infrastructure.Profiles;
 using Infrastructure.Seed;
 using Infrastructure.Services.Memory;
@@ -51,6 +53,9 @@ builder.Services.AddScoped<SeedData>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
+
+
+
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 
@@ -82,6 +87,12 @@ builder.Services.AddScoped<IChooseUsService>(sp =>
         uploadPath 
     ));
 
+builder.Services.AddScoped<IVideoReviewService>(sp => new VideoReviewService(
+    sp.GetRequiredService<DataContext>(),
+    sp.GetRequiredService<IRedisMemoryCache>(),
+    uploadPath
+));
+
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseService>(cr => 
     new CourseService(
@@ -95,6 +106,10 @@ builder.Services.AddScoped<IColleagueService>(cr =>
         cr.GetRequiredService<IColleagueRepository>(),
         uploadPath
     ));
+
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+builder.Services.AddScoped<ILikeService, LikeService>();
+
 
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<INewsService>(nw=> 
@@ -131,7 +146,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Error")))
     };
 });
 
@@ -168,7 +183,6 @@ var env = builder.Environment;
 builder.Services.AddScoped<IBannerService>(sp =>
     new BannerService(
         sp.GetRequiredService<IBannerRepository>(),
-        sp.GetRequiredService<IMapper>(),
         env.WebRootPath
     )
 );

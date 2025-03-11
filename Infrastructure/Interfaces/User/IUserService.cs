@@ -14,7 +14,7 @@ public interface IUserService
     Task<Response<string>> CreateUserAsync(CreateUserDto createUserDto);
     Task<Response<string>> UpdateUserAsync(UpdateUserDto updateUserDto);
     Task<Response<string>> DeleteUserAsync(int id);
-    Task<Response<string>> UpdateUserProfileImageAsync(int userId, IFormFile profileImage);
+    Task<Response<string>> UpdateUserProfileImageAsync(int userId, IFormFile? profileImage);
     
     Task<PaginationResponse<List<GetUserDto>>> GetStudentsAsync();//where role = "Student"
     Task<Response<GetUserDto>> GetStudentByIdAsync(int id);//where role = "Student"

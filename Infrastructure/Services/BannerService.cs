@@ -1,4 +1,3 @@
-using AutoMapper;
 using Domain.Dtos.BannerDto;
 using Domain.Entities;
 using Infrastructure.Interfaces;
@@ -9,12 +8,12 @@ namespace Infrastructure.Services;
 
 public class BannerService(
     IBannerRepository bannerRepository,
-    IMapper mapper,
     string uploadPath) : IBannerService
 {
     private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB 
 
+    #region GetAllBanners
     public async Task<Response<List<GetBannerDto>>> GetAllBanners(string language = "En")
     {
         var bannerType = typeof(Banner);
@@ -22,13 +21,16 @@ public class BannerService(
         var dto = banners.Select(banner => new GetBannerDto
         {
             Id = banner.Id,
-            Title = bannerType.GetProperty("Title" + language).GetValue(banner).ToString(),
-            Description = bannerType.GetProperty("Description" + language).GetValue(banner).ToString(),
+            Title = bannerType.GetProperty("Title" + language)?.GetValue(banner)?.ToString(),
+            Description = bannerType.GetProperty("Description" + language)?.GetValue(banner)?.ToString(),
         }).ToList();
 
         return new Response<List<GetBannerDto>>(dto) { Message = "Banners retrieved successfully" };
     }
+    #endregion
 
+    
+    #region GetBanner
     public async Task<Response<GetBannerDto>> GetBannerById(int id, string language = "En")
     {
         var banner = await bannerRepository.GetBanner(id);
@@ -45,6 +47,9 @@ public class BannerService(
         };
         return new Response<GetBannerDto>(dto) { Message = "Banner retrieved successfully" };
     }
+    #endregion
+    
+    
     public async Task<Response<string>> CreateBanner(CreateBannerDto dto)
     {
         if (dto.ImageFile.Length == 0)

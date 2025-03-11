@@ -92,7 +92,6 @@ public class CommentService(ICommentRepository commentRepository, INewsRepositor
             Id = comment.Id,
             Content = comment.Content,
             UserId = comment.UserId,
-            LikeCount = comment.LikeCount,
             PatternCommentId = comment.PatternCommentId,
             NewsId = comment.NewsId,
             SubComments = comment.PatternComments.Select(MapCommentToDto).ToList()

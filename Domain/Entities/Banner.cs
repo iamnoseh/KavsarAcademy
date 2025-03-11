@@ -1,10 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
 namespace Domain.Entities;
 
 public class Banner : BaseEntity
 {
-    public string TitleTj { get; set; } 
+    public string TitleTj { get; set; } = string.Empty;
     public string TitleRu { get; set; } 
     public string TitleEn { get; set; } 
     
@@ -13,6 +14,7 @@ public class Banner : BaseEntity
     public string DescriptionEn { get; set; }
     
     public string ImagePath { get; set; }
+    
     [NotMapped]
     public IFormFile Image { get; set; }
 }

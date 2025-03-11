@@ -3,7 +3,7 @@ using Domain.Dtos.Comment;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers;
+namespace WebApp.Controllers;
 
 
 [ApiController]

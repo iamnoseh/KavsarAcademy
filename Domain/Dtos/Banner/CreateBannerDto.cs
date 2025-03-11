@@ -10,5 +10,4 @@ public class CreateBannerDto
     public string DescriptionRu { get; set; }
     public string DescriptionEn { get; set; }
     public IFormFile ImageFile { get; set; }
-    
 }

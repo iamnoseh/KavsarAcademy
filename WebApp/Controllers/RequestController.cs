@@ -1,12 +1,11 @@
 using Domain.Dtos.Request;
-using Domain.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Responses;
 using Infrastructure.Seed;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers;
+namespace WebApp.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class RequestController (IRequestService service) : Controller

@@ -1,13 +1,11 @@
 using Domain.Dtos;
-using Domain.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Responses;
 using Infrastructure.Seed;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
 
-namespace WebApi.Controllers;
+namespace WebApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
