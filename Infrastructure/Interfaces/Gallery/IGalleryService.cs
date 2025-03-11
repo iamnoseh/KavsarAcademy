@@ -1,4 +1,5 @@
 using Domain.Dtos;
+using Domain.Dtos.Gallery;
 using Infrastructure.Responses;
 
 namespace Infrastructure.Interfaces;

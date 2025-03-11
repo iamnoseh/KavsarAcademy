@@ -25,7 +25,9 @@
   <ItemGroup>
     <Folder Include="wwwroot\uploads\banners\" />
     <Folder Include="wwwroot\uploads\chooseUsIcons\" />
+    <Folder Include="wwwroot\uploads\Colleague\" />
     <Folder Include="wwwroot\uploads\courses\" />
+    <Folder Include="wwwroot\uploads\Gallery\" />
     <Folder Include="wwwroot\uploads\news\" />
     <Folder Include="wwwroot\uploads\profiles\" />
   </ItemGroup>

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Domain.Dtos;
+namespace Domain.Dtos.Gallery;
 
 public class CreateMediaDto
 {
-    public IFormFile MediaFile { get; set; }
+    public IFormFile? MediaFile { get; set; }
 }

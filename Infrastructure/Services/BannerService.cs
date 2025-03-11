@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Dtos.BannerDto;
 using Domain.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Interfaces.IServices;
 using Infrastructure.Responses;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
@@ -19,8 +12,7 @@ public class BannerService(
     IMapper mapper,
     string uploadPath) : IBannerService
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB 
 
     public async Task<Response<List<GetBannerDto>>> GetAllBanners(string language = "En")
@@ -30,9 +22,8 @@ public class BannerService(
         var dto = banners.Select(banner => new GetBannerDto
         {
             Id = banner.Id,
-            Title = bannerType.GetProperty("Title" + language)?.GetValue(banner)?.ToString(),
-            Description = bannerType.GetProperty("Description" + language)?.GetValue(banner)?.ToString(),
-            ImagePath = banner.ImagePath
+            Title = bannerType.GetProperty("Title" + language).GetValue(banner).ToString(),
+            Description = bannerType.GetProperty("Description" + language).GetValue(banner).ToString(),
         }).ToList();
 
         return new Response<List<GetBannerDto>>(dto) { Message = "Banners retrieved successfully" };
@@ -56,7 +47,7 @@ public class BannerService(
     }
     public async Task<Response<string>> CreateBanner(CreateBannerDto dto)
     {
-        if (dto.ImageFile == null || dto.ImageFile.Length == 0)
+        if (dto.ImageFile.Length == 0)
             return new Response<string>(System.Net.HttpStatusCode.BadRequest, "Image file is required");
 
         if (dto.ImageFile.Length > MaxFileSize)

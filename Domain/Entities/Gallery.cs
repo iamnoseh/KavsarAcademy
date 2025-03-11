@@ -5,7 +5,8 @@ namespace Domain.Entities;
 
 public class Gallery : BaseEntity
 {
-    public string MediaUrl { get; set; }
+    public string MediaUrl { get; set; } 
     [NotMapped]
     public IFormFile MediaFile { get; set; }
+
 }

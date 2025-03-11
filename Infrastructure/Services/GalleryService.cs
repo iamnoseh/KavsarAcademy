@@ -1,5 +1,6 @@
 using System.Net;
 using Domain.Dtos;
+using Domain.Dtos.Gallery;
 using Domain.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Interfaces.Gallery;

@@ -18,6 +18,7 @@ public class SeedData(UserManager<User> userManager, RoleManager<IdentityRole<in
             Address = "Dushanbe",
             Age = 24,
             FirstName = "Test",
+            LastName = "test",
             PhoneNumber = "987654321",
             RegistrationDate = DateTime.UtcNow,
             IsActive = true,

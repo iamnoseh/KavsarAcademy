@@ -19,6 +19,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SwaggerThemes;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 //baroi dastrasii har user ba dannihoi khud
 builder.Services.AddHttpContextAccessor();
@@ -84,6 +86,13 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseService>(cr => 
     new CourseService(
     cr.GetRequiredService<ICourseRepository>(),
+        uploadPath
+    ));
+
+builder.Services.AddScoped<IColleagueRepository, ColleagueRepository>();
+builder.Services.AddScoped<IColleagueService>(cr => 
+    new ColleagueService(
+        cr.GetRequiredService<IColleagueRepository>(),
         uploadPath
     ));
 

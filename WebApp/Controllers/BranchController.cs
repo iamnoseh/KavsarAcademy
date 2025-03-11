@@ -1,6 +1,8 @@
 using Domain.Dtos;
 using Infrastructure.Interfaces;
 using Infrastructure.Responses;
+using Infrastructure.Seed;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -22,18 +24,21 @@ public class BranchController (IBranchService service) : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> CreateBranch([FromForm]CreateBranchDto branchDto)
     {
         return await service.CreateBranchAsync(branchDto);
     }
 
     [HttpDelete]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> DeleteBranch(int id)
     {
         return await service.DeleteBranchAsync(id);
     }
 
     [HttpPut]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> UpdateBranch(UpdateBranchDto branchDto)
     {
         return await service.UpdateBranchAsync(branchDto);
