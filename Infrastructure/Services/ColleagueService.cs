@@ -58,9 +58,9 @@ public class ColleagueService(IColleagueRepository repository, string uploadPath
 
         var dto = new GetColleague
         {
-            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague)?.ToString(),
-            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague)?.ToString(),
-            About = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague)?.ToString(),
+            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
+            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
+            About = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
             ProfileImage = colleague.ImagePath,
         };
         return new Response<GetColleague>(dto);

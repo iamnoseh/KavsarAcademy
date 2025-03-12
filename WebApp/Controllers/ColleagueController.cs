@@ -19,7 +19,7 @@ public class ColleagueController (IColleagueService service) : ControllerBase
     [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> CreateColleague(CreateColleague request) => await service.CreateColleague(request);
    
-    [HttpGet("colleagueWithIcon/{id}")]
+    [HttpGet("{id}")]
     public async Task<Response<GetColleague>> GetColleagueId(int id,string language = "En") => await service.GetColleagueById(id,language);
     
     [HttpPut]
@@ -30,7 +30,7 @@ public class ColleagueController (IColleagueService service) : ControllerBase
     [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> DeleteColleague(int id) => await service.DeleteColleague(id);
     
-    [HttpGet] 
+    [HttpGet("colleagueWithIcon/{id}")] 
     public async Task<Response<GetColleagueWhitKnowingIcons>> GetColleagueBy(int id , string language = "En") => await service.GetColleagueWithKnowingIcon(id,language);
     
 }
