@@ -1,6 +1,6 @@
 using Domain.Dtos;
 using Domain.Dtos.Comment;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces;
 

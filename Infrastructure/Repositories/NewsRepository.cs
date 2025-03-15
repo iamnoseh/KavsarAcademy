@@ -7,19 +7,20 @@ namespace Infrastructure.Repositories;
 
 public class NewsRepository(DataContext context) : INewsRepository
 {
-    public async Task<List<News>> GetAllNews()
+    public async Task<List<News?>> GetAllNews()
     {
         return await context.News.Include(n => n.Likes).ToListAsync();
-    }
 
+    }
+    
     public async Task<News?> GetNewsById(int id)
     {
-        return await context.News.Include(n => n.Likes).FirstOrDefaultAsync(n => n.Id == id);
+        return await context.News.Include(n => n.Likes).FirstOrDefaultAsync(n => n != null && n.Id == id);
     }
 
     public async Task<int> CreateNews(News? news)
     {
-        await context.News.AddAsync(news);
+        if (news != null) await context.News.AddAsync(news);
         return await context.SaveChangesAsync();
     }
 

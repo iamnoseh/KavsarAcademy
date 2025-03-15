@@ -30,6 +30,7 @@
     <Folder Include="wwwroot\uploads\Gallery\" />
     <Folder Include="wwwroot\uploads\news\" />
     <Folder Include="wwwroot\uploads\profiles\" />
+    <Folder Include="wwwroot\uploads\VideoReviews\" />
   </ItemGroup>
 
   <ItemGroup>

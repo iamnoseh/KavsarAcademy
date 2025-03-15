@@ -1,7 +1,7 @@
 using Domain.Dtos.Account;
 using Domain.Dtos.Auth;
+using Domain.Responses;
 using Infrastructure.Interfaces.Account;
-using Infrastructure.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,5 +38,8 @@ public class AccountController(IAccountService service) : ControllerBase
     {
         return await service.RemoveRoleFromUser(request);
     }
+
+
+   
  
 }

@@ -2,8 +2,9 @@ using System.Net;
 using AutoMapper;
 using Domain.Dtos.Request;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
+
 namespace Infrastructure.Services;
 
 public class RequestService (IRequestRepository requestRepository,

@@ -1,14 +1,13 @@
 using System.Net;
-using System.Reflection;
-using Domain.Dtos;
 using Domain.Dtos.Colleague;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 
 namespace Infrastructure.Services;
 
-public class ColleagueService(IColleagueRepository repository, string uploadPath) : IColleagueService
+public class ColleagueService(IColleagueRepository repository, 
+    string uploadPath) : IColleagueService
 {
     private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB
@@ -17,7 +16,7 @@ public class ColleagueService(IColleagueRepository repository, string uploadPath
         var colleagueType = typeof(Colleague);
         var colleagues = await repository.GetAll();
     
-        if (colleagues == null || !colleagues.Any())
+        if (!colleagues.Any())
             return new Response<List<GetColleagueWhitKnowingIcons>>(HttpStatusCode.NotFound, "Colleague not found");
 
         var dto = colleagues.Select(x => new GetColleagueWhitKnowingIcons
@@ -40,9 +39,9 @@ public class ColleagueService(IColleagueRepository repository, string uploadPath
 
         var dto = new GetColleagueWhitKnowingIcons
         {
-            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague)?.ToString(),
-            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague)?.ToString(),
-            Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague)?.ToString(),
+            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
+            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
+            Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
             ProfileImagePath = colleague.ImagePath,
             KnowingIcons = colleague.Icons.ToList()
         };
@@ -68,7 +67,7 @@ public class ColleagueService(IColleagueRepository repository, string uploadPath
 
     public async Task<Response<string>> CreateColleague(CreateColleague request)
     {
-        if (request.ImageFile == null || request.ImageFile.Length == 0)
+        if (request.ImageFile.Length == 0)
             return new Response<string>(HttpStatusCode.BadRequest, "Image file is required");
 
         if (request.ImageFile.Length > MaxFileSize)
@@ -105,7 +104,7 @@ public class ColleagueService(IColleagueRepository repository, string uploadPath
             Icons = new List<string>()
         };
         
-        if (request.IconFiles != null && request.IconFiles.Any())
+        if (request.IconFiles.Any())
         {
             var galleryUploadsFolder = Path.Combine(uploadPath, "uploads", "Gallery");
             if (!Directory.Exists(galleryUploadsFolder))
@@ -126,9 +125,9 @@ public class ColleagueService(IColleagueRepository repository, string uploadPath
                 {
                     await iconFile.CopyToAsync(iconStream);
                 }
-                string MediaUrl = $"/uploads/Gallery/{iconUniqueFileName}";
+                string mediaUrl = $"/uploads/Gallery/{iconUniqueFileName}";
                 
-                colleague.Icons.Add(MediaUrl);
+                colleague.Icons.Add(mediaUrl);
             }
         }
 

@@ -1,6 +1,6 @@
 using Domain.Dtos;
 using Domain.Dtos.Gallery;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces;
 

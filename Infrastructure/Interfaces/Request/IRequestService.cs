@@ -1,5 +1,6 @@
 using Domain.Dtos.Request;
-using Infrastructure.Responses;
+using Domain.Responses;
+
 namespace Infrastructure.Interfaces;
 
 public interface IRequestService

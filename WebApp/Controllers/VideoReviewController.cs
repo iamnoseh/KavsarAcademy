@@ -1,6 +1,6 @@
 using Domain.Dtos.VideoReview;
+using Domain.Responses;
 using Infrastructure.Interfaces.VideoReview;
-using Infrastructure.Responses;
 using Infrastructure.Seed;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

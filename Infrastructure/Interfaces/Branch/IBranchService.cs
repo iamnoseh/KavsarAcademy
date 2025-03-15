@@ -1,5 +1,5 @@
 using Domain.Dtos;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces;
 

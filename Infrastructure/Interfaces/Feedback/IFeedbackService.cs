@@ -1,6 +1,6 @@
 using Domain.Dtos.Feedback;
 using Domain.Filters;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces;
 

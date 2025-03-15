@@ -1,13 +1,13 @@
 using Domain.Dtos;
 using Domain.Dtos.Comment;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
-public class CommentService(ICommentRepository commentRepository, INewsRepository newsRepository) : ICommentService
+public class CommentService(ICommentRepository commentRepository, 
+    INewsRepository newsRepository) : ICommentService
 {
     public async Task<Response<List<GetCommentDto>>> GetAllCommentsAsync()
     {
@@ -77,7 +77,7 @@ public class CommentService(ICommentRepository commentRepository, INewsRepositor
         var subComments = await commentRepository.GetSubComments(id);
         foreach (var subComment in subComments)
         {
-            await DeleteCommentAsync(subComment.Id); // Нест кардани зеркоммент
+            if (subComment != null) await DeleteCommentAsync(subComment.Id); // Нест кардани зеркоммент
         }
 
         await commentRepository.Delete(comment);
@@ -85,7 +85,7 @@ public class CommentService(ICommentRepository commentRepository, INewsRepositor
     }
 
 
-    private GetCommentDto MapCommentToDto(Comment comment)
+    private GetCommentDto MapCommentToDto(Comment? comment)
     {
         return new GetCommentDto
         {

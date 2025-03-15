@@ -1,9 +1,9 @@
 using System.Net;
 using Domain.Dtos.VideoReview;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Data;
 using Infrastructure.Interfaces.VideoReview;
-using Infrastructure.Responses;
 using Infrastructure.Services.Memory;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,13 +51,13 @@ public class VideoReviewService(
 
     public async Task<Response<string>> CreateReviewVideo(CreateVideoReview request)
     {
-        if (request.VideoReviewFile.Length == 0)
+        if (request.VideoReviewFile != null && request.VideoReviewFile.Length == 0)
             return new Response<string>(HttpStatusCode.BadRequest, "VideoReviews file is required");
 
-        if (request.VideoReviewFile.Length > MaxFileSize)
+        if (request.VideoReviewFile != null && request.VideoReviewFile.Length > MaxFileSize)
             return new Response<string>(HttpStatusCode.BadRequest, "VideoReviews file size must be less than 250Mb");
 
-        var fileExtension = Path.GetExtension(request.VideoReviewFile.FileName).ToLower();
+        var fileExtension = Path.GetExtension(request.VideoReviewFile?.FileName)?.ToLower();
         
         var uploadsFolder = Path.Combine(uploadPath, "uploads", "VideoReviews");
         if (!Directory.Exists(uploadsFolder))
@@ -68,7 +68,7 @@ public class VideoReviewService(
 
         await using (var fileStream = new FileStream(filePath, FileMode.Create))
         {
-            await request.VideoReviewFile.CopyToAsync(fileStream);
+            if (request.VideoReviewFile != null) await request.VideoReviewFile.CopyToAsync(fileStream);
         }
 
         var media = new VideoReview()
@@ -98,11 +98,11 @@ public class VideoReviewService(
         media.ReviewerNameTj = request.ReviewerNameTj;
         media.ReviewerNameEn = request.ReviewerNameEn;
         {
-            if (request.VideoReviewFile.Length > MaxFileSize)
+            if (request.VideoReviewFile != null && request.VideoReviewFile.Length > MaxFileSize)
                 return new Response<string>(HttpStatusCode.BadRequest,
                     "Image file size must be less than 250MB");
 
-            var fileExtension = Path.GetExtension(request.VideoReviewFile.FileName).ToLower();
+            var fileExtension = Path.GetExtension(request.VideoReviewFile?.FileName)?.ToLower();
 
             var uploadsFolder = Path.Combine(uploadPath, "uploads", "VideoReviews");
             if (!Directory.Exists(uploadsFolder))

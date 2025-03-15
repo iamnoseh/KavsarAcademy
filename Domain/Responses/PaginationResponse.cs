@@ -1,7 +1,6 @@
 using System.Net;
-using Domain.Filters;
 
-namespace Infrastructure.Responses;
+namespace Domain.Responses;
 
 public class PaginationResponse<T> : Response<T>
 {

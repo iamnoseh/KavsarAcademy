@@ -1,6 +1,6 @@
 using Domain.Dtos.Request;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 using Infrastructure.Seed;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -3,9 +3,9 @@ using Domain.Dtos.User;
 using Domain.Entities;
 using Domain.Filters;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using Domain.Responses;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services;
@@ -49,10 +49,13 @@ public class UserService(
     public async Task<Response<GetUserDto>> GetByIdAsync(int id)
     {
         var user = await userRepository.GetByIdAsync(id);
-        if (user == null)
-            return new Response<GetUserDto>(HttpStatusCode.NotFound, "User not found");
+        // if (user == null)
+        //     return new Response<GetUserDto>(HttpStatusCode.NotFound, "User not found");
 
         var userDto = mapper.Map<GetUserDto>(user);
+        if (userDto is null) 
+            return new Response<GetUserDto>(HttpStatusCode.NotFound, "User not found");
+        
         return new Response<GetUserDto>(userDto);
     }
 

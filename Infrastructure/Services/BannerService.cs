@@ -1,8 +1,9 @@
+using System.Net;
 using Domain.Dtos.BannerDto;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
 using Infrastructure.Interfaces.IServices;
-using Infrastructure.Responses;
 
 namespace Infrastructure.Services;
 
@@ -18,11 +19,14 @@ public class BannerService(
     {
         var bannerType = typeof(Banner);
         var banners = await bannerRepository.GetAll();
+        if (!banners.Any())
+            return new Response<List<GetBannerDto>>(HttpStatusCode.NotFound,"Not found");
         var dto = banners.Select(banner => new GetBannerDto
         {
             Id = banner.Id,
             Title = bannerType.GetProperty("Title" + language)?.GetValue(banner)?.ToString(),
             Description = bannerType.GetProperty("Description" + language)?.GetValue(banner)?.ToString(),
+            ImagePath = banner.ImagePath
         }).ToList();
 
         return new Response<List<GetBannerDto>>(dto) { Message = "Banners retrieved successfully" };
@@ -35,7 +39,7 @@ public class BannerService(
     {
         var banner = await bannerRepository.GetBanner(id);
         if (banner == null)
-            return new Response<GetBannerDto>(System.Net.HttpStatusCode.NotFound, "Banner not found");
+            return new Response<GetBannerDto>(HttpStatusCode.NotFound, "Banner not found");
 
         var bannerType = typeof(Banner);
         var dto = new GetBannerDto

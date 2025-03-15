@@ -2,8 +2,8 @@ using System.Net;
 using AutoMapper;
 using Domain.Dtos;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 
 namespace Infrastructure.Services;
 
@@ -36,9 +36,7 @@ public class BranchService(IBranchRepository branchRepository, IMapper mapper) :
         var typeBranch = typeof(Branch);
         var branch = await branchRepository.GetBranch(id);
         if (branch == null)
-        {
             return new Response<GetBranchDto>(HttpStatusCode.NotFound, "Branch not found");
-        }
 
         var branchDto = new GetBranchDto
         {

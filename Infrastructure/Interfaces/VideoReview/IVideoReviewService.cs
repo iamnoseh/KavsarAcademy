@@ -1,5 +1,5 @@
 using Domain.Dtos.VideoReview;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces.VideoReview;
 

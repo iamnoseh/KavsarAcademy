@@ -1,8 +1,8 @@
 using Domain.Dtos.User;
-using Infrastructure.Responses;
 using Domain.Filters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Domain.Responses;
 using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Interfaces;

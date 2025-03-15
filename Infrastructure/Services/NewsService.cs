@@ -1,8 +1,8 @@
 using System.Net;
 using Domain.Dtos;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 using Infrastructure.Services.Memory;
 
 
@@ -115,10 +115,9 @@ public class NewsService (INewsRepository repository,
         oldNews.ContentEn = request.ContentEn;
         oldNews.UpdatedAt = DateTime.UtcNow;
 
-        if (request.Media != null)
         {
             if (request.Media.Length > MaxFileSize)
-                return new Response<string>(System.Net.HttpStatusCode.BadRequest,
+                return new Response<string>(HttpStatusCode.BadRequest,
                     "Image file size must be less than 100MB");
 
             var fileExtension = Path.GetExtension(request.Media.FileName).ToLower();

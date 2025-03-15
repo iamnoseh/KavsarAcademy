@@ -1,6 +1,5 @@
 using Domain.Entities;
 using Domain.Filters;
-using Infrastructure.Responses;
 
 namespace Infrastructure.Interfaces;
 

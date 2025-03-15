@@ -12,7 +12,7 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Like> Likes { get; set; }
     public DbSet<Comment> Comments { get; set; }
-    public DbSet<News> News { get; set; }
+    public DbSet<News?> News { get; set; }
     public DbSet<ChooseUs> ChooseUss{ get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Feedback> Feedbacks { get; set; }
@@ -20,6 +20,7 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<Gallery> Galleries { get; set; }
     public DbSet<Colleague> Colleagues { get; set; }
     public DbSet<VideoReview> VideoReviews { get; set; }
+    
     
     protected override void OnModelCreating(ModelBuilder builder)
     {

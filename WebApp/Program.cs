@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.ExtensionMethods.Register;
 using Infrastructure.Interfaces.Account;
 using Infrastructure.Interfaces.Gallery;
-using Infrastructure.Interfaces.LIke;
 using Infrastructure.Interfaces.VideoReview;
 using Infrastructure.Profiles;
 using Infrastructure.Seed;
@@ -22,22 +22,15 @@ using Microsoft.OpenApi.Models;
 using SwaggerThemes;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 //baroi dastrasii har user ba dannihoi khud
 builder.Services.AddHttpContextAccessor();
 // DbContext
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
+builder.Services.AddRegisterService(builder.Configuration);
 builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IBannerRepository, BannerRepository>();
-builder.Services.AddScoped<IRequestRepository, RequestRepository>();
-builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IAccountService>(sp =>
     new AccountService(
         sp.GetRequiredService<UserManager<User>>(),
@@ -45,30 +38,6 @@ builder.Services.AddScoped<IAccountService>(sp =>
         sp.GetRequiredService<IConfiguration>(),
         builder.Environment.WebRootPath
     ));
-builder.Services.AddScoped<IChooseUsRepository, ChooseUsRepository>();
-// builder.Services.AddScoped<IChooseUsService, ChooseUsService>();
-builder.Services.AddScoped<SeedData>();
-
-
-builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
-
-
-
-
-builder.Services.AddScoped<IBranchService, BranchService>();
-builder.Services.AddScoped<IBranchRepository, BranchRepository>();
-
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ICommentService, CommentService>();
-
-//RedisCache
-builder.Services.AddScoped<IRedisMemoryCache, RedisMemoryCache>();
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("RedisCache"); 
-    options.InstanceName = "Kavsar_"; 
-});
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 var uploadPath = builder.Configuration.GetValue<string>("UploadPath") ?? "wwwroot";
@@ -107,11 +76,7 @@ builder.Services.AddScoped<IColleagueService>(cr =>
         uploadPath
     ));
 
-builder.Services.AddScoped<ILikeRepository, LikeRepository>();
-builder.Services.AddScoped<ILikeService, LikeService>();
 
-
-builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<INewsService>(nw=> 
     new NewsService(
         nw.GetRequiredService<INewsRepository>(),
@@ -195,6 +160,8 @@ try
     using var scope = app.Services.CreateScope();
     var serviceProvider = scope.ServiceProvider;
     var dataContext = serviceProvider.GetRequiredService<DataContext>();
+    await dataContext.Database.MigrateAsync();
+    Console.WriteLine("Database migrated successfully.");
     await dataContext.Database.MigrateAsync();
     var seeder = serviceProvider.GetRequiredService<SeedData>();
     await seeder.SeedRole();

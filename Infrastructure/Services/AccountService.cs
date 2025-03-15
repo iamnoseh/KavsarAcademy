@@ -5,12 +5,12 @@ using Domain.Dtos.Account;
 using Domain.Dtos.Auth;
 using Domain.Entities;
 using Infrastructure.Interfaces.Account;
-using Infrastructure.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 using System.Net;
+using Domain.Responses;
 
 namespace Infrastructure.Services
 {

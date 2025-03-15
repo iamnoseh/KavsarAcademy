@@ -3,9 +3,9 @@ using System.Security.Claims;
 using Domain.Dtos.Feedback;
 using Domain.Entities;
 using Domain.Filters;
+using Domain.Responses;
 using Infrastructure.Data;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Services;
@@ -24,7 +24,7 @@ public class FeedbackService(IFeedbackRepository feedbackRepository,
         {
             string? fullName;
             string? profileImagePath = null;
-            if (feedback.UserId.HasValue)
+            if (feedback != null && feedback.UserId.HasValue)
             {
                 var user = await context.Users.FindAsync(feedback.UserId.Value);
                 fullName = user != null ? $"{user.FirstName} {user.LastName}" : " ";

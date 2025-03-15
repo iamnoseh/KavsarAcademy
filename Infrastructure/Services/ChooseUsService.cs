@@ -2,16 +2,15 @@ using System.Net;
 using AutoMapper;
 using Domain.Dtos;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Domain.Entities;
+using Domain.Responses;
 
 namespace Infrastructure.Services
 {
     public class ChooseUsService(IChooseUsRepository chooseUsRepository, 
-        IMapper mapper, string uploadPath)
-        : IChooseUsService
+        IMapper mapper, string uploadPath ): IChooseUsService
     {
         private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
         private const long MaxFileSize = 10 * 1024 * 1024; // 10MB
@@ -23,14 +22,14 @@ namespace Infrastructure.Services
             if (!chooseUsList.Any())
                 return new Response<List<GetChooseUsDto>>(HttpStatusCode.NotFound, "Choose us not found");
 
-            var choosedto = chooseUsList.Select(x => new GetChooseUsDto()
+            var chooseDto = chooseUsList.Select(x => new GetChooseUsDto()
             {
                 Id = x.Id,
-                Title = typeChoose.GetProperty("Title" + language)?.GetValue(x)?.ToString(),
-                Description = typeChoose.GetProperty("Description" + language)?.GetValue(x)?.ToString(),
+                Title = typeChoose.GetProperty("Title" + language)?.GetValue(x).ToString(),
+                Description = typeChoose.GetProperty("Description" + language)?.GetValue(x).ToString(),
                 IconPath = x.IconPath,
             }).ToList();
-            return new Response<List<GetChooseUsDto>>(choosedto);
+            return new Response<List<GetChooseUsDto>>(chooseDto);
         }
 
         public async Task<Response<GetChooseUsDto>> GetChooseUsByIdAsync(int id, string language = "En")
@@ -43,8 +42,8 @@ namespace Infrastructure.Services
             var choosedto = new GetChooseUsDto()
             {
                 Id = chooseUs.Id,
-                Title = typeChoose.GetProperty("Title" + language)?.GetValue(chooseUs)?.ToString(),
-                Description = typeChoose.GetProperty("Description" + language)?.GetValue(chooseUs)?.ToString(),
+                Title = typeChoose.GetProperty("Title" + language)?.GetValue(chooseUs).ToString(),
+                Description = typeChoose.GetProperty("Description" + language)?.GetValue(chooseUs).ToString(),
                 IconPath = chooseUs.IconPath,
             };
             return new Response<GetChooseUsDto>(choosedto);
@@ -52,7 +51,7 @@ namespace Infrastructure.Services
 
         public async Task<Response<string>> CreateChooseUsAsync(CreateChooseUsDto createChooseUsDto)
         {
-            if (createChooseUsDto.Icon == null || createChooseUsDto.Icon.Length == 0)
+            if (createChooseUsDto.Icon.Length == 0)
                 return new Response<string>(HttpStatusCode.BadRequest, "Icon is required");
 
             // Checking file extension and size
@@ -66,7 +65,7 @@ namespace Infrastructure.Services
             // Save icon
             var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
             var filePath = Path.Combine(uploadPath, "uploads", "chooseUsIcons", uniqueFileName);
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? string.Empty);
 
             await using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -86,7 +85,7 @@ namespace Infrastructure.Services
                 return new Response<string>(HttpStatusCode.NotFound, "ChooseUs not found");
 
             // Handle icon upload if exists
-            if (updateChooseUsDto.Icon != null && updateChooseUsDto.Icon.Length > 0)
+            if (updateChooseUsDto.Icon.Length > 0)
             {
                 var fileExtension = Path.GetExtension(updateChooseUsDto.Icon.FileName).ToLowerInvariant();
                 if (!_allowedExtensions.Contains(fileExtension))
@@ -106,7 +105,7 @@ namespace Infrastructure.Services
                 // Save the new icon
                 var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
                 var filePath = Path.Combine(uploadPath, "uploads", "chooseUsIcons", uniqueFileName);
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? string.Empty);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {

@@ -2,9 +2,9 @@ using System.Net;
 using Domain.Dtos;
 using Domain.Dtos.Gallery;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
 using Infrastructure.Interfaces.Gallery;
-using Infrastructure.Responses;
 using Infrastructure.Services.Memory;
 
 namespace Infrastructure.Services;
@@ -44,33 +44,37 @@ public class GalleryService (IGalleryRepository repository,
 
     public async Task<Response<string>> CreateMediaAsync(CreateMediaDto createMediaDto)
     {
-        if (createMediaDto.MediaFile.Length == 0)
+        if (createMediaDto.MediaFile != null && createMediaDto.MediaFile.Length == 0)
             return new Response<string>(HttpStatusCode.BadRequest, "Media file is required");
 
-        if (createMediaDto.MediaFile.Length > MaxFileSize)
+        if (createMediaDto.MediaFile != null && createMediaDto.MediaFile.Length > MaxFileSize)
             return new Response<string>(HttpStatusCode.BadRequest, "Media file size must be less than 250Mb");
 
-        var fileExtension = Path.GetExtension(createMediaDto.MediaFile.FileName).ToLower();
-        
-        var uploadsFolder = Path.Combine(uploadPath, "uploads", "Gallery");
-        if (!Directory.Exists(uploadsFolder))
-            Directory.CreateDirectory(uploadsFolder);
-
-        var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        await using (var fileStream = new FileStream(filePath, FileMode.Create))
+        if (createMediaDto.MediaFile != null)
         {
-            await createMediaDto.MediaFile.CopyToAsync(fileStream);
+            var fileExtension = Path.GetExtension(createMediaDto.MediaFile.FileName).ToLower();
+        
+            var uploadsFolder = Path.Combine(uploadPath, "uploads", "Gallery");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            await using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await createMediaDto.MediaFile.CopyToAsync(fileStream);
+            }
+
+            var media = new Gallery()
+            {
+                CreatedAt = DateTime.UtcNow,
+                MediaUrl = $"/uploads/Gallery/{uniqueFileName}",
+            };
+            var res = await repository.CreateMedia(media);
+            if (res <= 0) return new Response<string>(HttpStatusCode.BadGateway, "Something went wrong");
         }
 
-        var media = new Gallery()
-        {
-            CreatedAt = DateTime.UtcNow,
-            MediaUrl = $"/uploads/Gallery/{uniqueFileName}",
-        };
-        var res = await repository.CreateMedia(media);
-        if (res <= 0) return new Response<string>(HttpStatusCode.BadGateway, "Something went wrong");
         await memoryCache.RemoveDataAsync(Key);
         return new Response<string>(HttpStatusCode.Created, "Media added");
     }

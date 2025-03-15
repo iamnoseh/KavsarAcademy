@@ -1,6 +1,6 @@
 using Domain.Dtos.Account;
 using Domain.Dtos.Auth;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces.Account;
 

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Domain.Dtos.BannerDto;
-using Infrastructure.Responses;
+using Domain.Responses;
 
 namespace Infrastructure.Interfaces.IServices;
 

@@ -1,12 +1,13 @@
 using System.Net;
 using Domain.Dtos;
 using Domain.Entities;
+using Domain.Responses;
 using Infrastructure.Interfaces;
-using Infrastructure.Responses;
 
 namespace Infrastructure.Services;
 
-public class CourseService (ICourseRepository courseRepository,string uploadPath) : ICourseService
+public class CourseService (ICourseRepository courseRepository,
+    string uploadPath) : ICourseService
 {
     private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
     private const long MaxFileSize = 10 * 1024 * 1024; 
@@ -46,15 +47,15 @@ public class CourseService (ICourseRepository courseRepository,string uploadPath
 
     public async Task<Response<string>> CreateCourseAsync(CreateCourseDto courseDto)
     {
-        if (courseDto.Image == null || courseDto.Image.Length == 0)
-            return new Response<string>(System.Net.HttpStatusCode.BadRequest, "Image file is required");
+        if (courseDto.Image.Length == 0)
+            return new Response<string>(HttpStatusCode.BadRequest, "Image file is required");
 
         if (courseDto.Image.Length > MaxFileSize)
-            return new Response<string>(System.Net.HttpStatusCode.BadRequest, "Image file size must be less than 10MB");
+            return new Response<string>(HttpStatusCode.BadRequest, "Image file size must be less than 10MB");
 
         var fileExtension = Path.GetExtension(courseDto.Image.FileName).ToLower();
         if (!_allowedExtensions.Contains(fileExtension))
-            return new Response<string>(System.Net.HttpStatusCode.BadRequest,
+            return new Response<string>(HttpStatusCode.BadRequest,
                 "Invalid image format. Allowed formats: .jpg, .jpeg, .png, .gif");
 
 
@@ -92,7 +93,7 @@ public class CourseService (ICourseRepository courseRepository,string uploadPath
     {
         var banner = await courseRepository.GetById(courseDto.Id);
         if (banner == null)
-            return new Response<string>(System.Net.HttpStatusCode.NotFound, "Course not found");
+            return new Response<string>(HttpStatusCode.NotFound, "Course not found");
 
         banner.NameTj = courseDto.NameTj;
         banner.NameRu = courseDto.NameRu ;
@@ -102,15 +103,14 @@ public class CourseService (ICourseRepository courseRepository,string uploadPath
         banner.DescriptionEn = courseDto.DescriptionEn;
         banner.UpdatedAt = DateTime.UtcNow;
 
-        if (courseDto.Image != null)
         {
             if (courseDto.Image.Length > MaxFileSize)
-                return new Response<string>(System.Net.HttpStatusCode.BadRequest,
+                return new Response<string>(HttpStatusCode.BadRequest,
                     "Image file size must be less than 10MB");
 
             var fileExtension = Path.GetExtension(courseDto.Image.FileName).ToLower();
             if (!_allowedExtensions.Contains(fileExtension))
-                return new Response<string>(System.Net.HttpStatusCode.BadRequest,
+                return new Response<string>(HttpStatusCode.BadRequest,
                     "Invalid image format. Allowed formats: .jpg, .jpeg, .png, .gif");
 
             var uploadsFolder = Path.Combine(uploadPath, "uploads", "course");
@@ -136,7 +136,7 @@ public class CourseService (ICourseRepository courseRepository,string uploadPath
     {
         var course = await courseRepository.GetById(courseId);
         if (course == null)
-            return new Response<string>(System.Net.HttpStatusCode.NotFound, "Course not found");
+            return new Response<string>(HttpStatusCode.NotFound, "Course not found");
         var result = await courseRepository.Delete(course);
         return result > 0
             ? new Response<string>(HttpStatusCode.NoContent,"Course deleted successfully")
