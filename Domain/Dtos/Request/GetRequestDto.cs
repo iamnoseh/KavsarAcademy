@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Domain.Dtos.Request;
 
 public class GetRequestDto
@@ -9,4 +11,5 @@ public class GetRequestDto
     public string Question { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsApproved { get; set; }
+    public Find Find { get; set; }
 }
