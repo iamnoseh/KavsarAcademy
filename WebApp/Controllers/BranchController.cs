@@ -11,13 +11,13 @@ namespace WebApp.Controllers;
 public class BranchController (IBranchService service) : Controller
 {
     [HttpGet]
-    public async Task<Response<List<GetBranchDto>>> GetBranches(string language = "En")
+    public async Task<Response<List<GetBranchDto>>> GetBranches(string language = "Ru")
     {
         return await service.GetAllBranchesAsync(language);
     }
 
     [HttpGet("{Id}")]
-    public async Task<IActionResult> GetBranchById(int id, [FromQuery] string language = "En")
+    public async Task<IActionResult> GetBranchById(int id, [FromQuery] string language = "Ru")
     {
         var response = await service.GetBranchByIdAsync(id, language);
         return Ok(response);

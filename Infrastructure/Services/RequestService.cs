@@ -39,7 +39,8 @@ public class RequestService (IRequestRepository requestRepository,
             Phone = request.Phone,
             IsDeleted = false,
             Question = request.Question,
-            DeletedAt = null
+            DeletedAt = null,
+            
         };
         var res = await requestRepository.CreateRequest(newRequest);
         return res > 0 
@@ -69,5 +70,31 @@ public class RequestService (IRequestRepository requestRepository,
         return res > 0 
             ? new Response<string>(HttpStatusCode.OK, "Request Deleted")
             : new Response<string>(HttpStatusCode.BadRequest, "Failed to delete request");
+    }
+
+    public async Task<Response<string>> ApproveRequestAsync(int id)
+    {
+        var approvedRequest = await requestRepository.GetRequest(id);
+        if (approvedRequest == null) return new Response<string>(HttpStatusCode.NotFound,"No request found");
+        var res = await requestRepository.ApprovedRequest(approvedRequest);
+        return res > 0 
+            ? new Response<string>(HttpStatusCode.OK, "Request Approved")
+            : new Response<string>(HttpStatusCode.BadRequest, "Failed to approve request");
+    }
+
+    public async Task<Response<List<GetRequestDto>>> GetAllApprovedRequestsAsync()
+    {
+        var approvedRequest = await requestRepository.GetApprovedRequests();
+        if (!approvedRequest.Any()) return new Response<List<GetRequestDto>>(HttpStatusCode.NotFound,"No approve requests found");
+        var res = mapper.Map<List<GetRequestDto>>(approvedRequest);
+        return new Response<List<GetRequestDto>>(res);
+    }
+
+    public async Task<Response<GetRequestDto>> GetApprovedRequestsAsync(int id)
+    {
+        var result = await requestRepository.GetApprovedRequest(id);
+        if (result == null) return new Response<GetRequestDto>(HttpStatusCode.NotFound,"No approve request found");
+        var res = mapper.Map<GetRequestDto>(result);
+        return new Response<GetRequestDto>(res);
     }
 }

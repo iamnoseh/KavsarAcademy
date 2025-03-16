@@ -11,14 +11,14 @@ namespace WebApp.Controllers;
 public class BannerController(IBannerService bannerService) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllBanners([FromQuery] string language = "En")
+    public async Task<IActionResult> GetAllBanners([FromQuery] string language = "Ru")
     {
         var response = await bannerService.GetAllBanners(language);
         return Ok(response);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetBannerById(int id, [FromQuery] string language = "En")
+    public async Task<IActionResult> GetBannerById(int id, [FromQuery] string language = "Ru")
     {
         var response = await bannerService.GetBannerById(id, language);
         return Ok(response);

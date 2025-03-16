@@ -15,7 +15,7 @@ public class BannerService(
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB 
 
     #region GetAllBanners
-    public async Task<Response<List<GetBannerDto>>> GetAllBanners(string language = "En")
+    public async Task<Response<List<GetBannerDto>>> GetAllBanners(string language = "Ru")
     {
         var bannerType = typeof(Banner);
         var banners = await bannerRepository.GetAll();

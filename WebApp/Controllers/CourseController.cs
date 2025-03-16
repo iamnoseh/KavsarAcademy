@@ -12,13 +12,13 @@ namespace WebApp.Controllers;
 public class CourseController(ICourseService service) : Controller
 {
     [HttpGet]
-    public async Task<Response<List<GetCourseDto>>> GetCourses(string language = "En")
+    public async Task<Response<List<GetCourseDto>>> GetCourses(string language = "Ru")
     {
         return await service.GetCoursesAsync(language);
     }
 
     [HttpGet("{id}")]
-    public async Task<Response<GetCourseDto>> GetCourseById(int id,string language = "En")
+    public async Task<Response<GetCourseDto>> GetCourseById(int id,string language = "Ru")
     {
         return await service.GetCourseByIdAsync(id, language);
     }

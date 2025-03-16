@@ -14,7 +14,7 @@ public class FeedbackController (IFeedbackService service) : ControllerBase
     [HttpGet]
     [Authorize(Roles = Roles.Admin)]
     public async Task<PaginationResponse<List<FeedbackGetDto>>> GetFeedbacks([FromQuery] BaseFilter filter,
-        [FromQuery] string language = "En")
+        [FromQuery] string language = "Ru")
     {
         return await service.GetFeedbacksAsync(filter, language);
     }
@@ -40,7 +40,7 @@ public class FeedbackController (IFeedbackService service) : ControllerBase
     }
 
     [HttpGet("id")]
-    public async Task<Response<FeedbackGetDto>> GetFeedbackById(int id, string language = "En")
+    public async Task<Response<FeedbackGetDto>> GetFeedbackById(int id, string language = "Ru")
     {
         return await service.GetFeedbackByIdAsync(id, language);
     }

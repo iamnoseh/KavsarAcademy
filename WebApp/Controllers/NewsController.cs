@@ -12,7 +12,7 @@ namespace WebApp.Controllers;
 public class NewsController(INewsService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<Response<List<GetNewsDto>>> GetNews(string language = "En")
+    public async Task<Response<List<GetNewsDto>>> GetNews(string language = "Ru")
     {
         return await service.GetNewsAsync(language);
     }
@@ -38,7 +38,7 @@ public class NewsController(INewsService service) : ControllerBase
     }
 
     [HttpGet("id")]
-    public async Task<Response<GetNewsDto>> GetNews(int id,string language = "En")
+    public async Task<Response<GetNewsDto>> GetNews(int id,string language = "Ru")
     {
         return await service.GetNewsByIdAsync(id, language);
     }

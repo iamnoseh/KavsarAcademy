@@ -12,12 +12,12 @@ namespace WebApp.Controllers;
 public class ChooseUsController (IChooseUsService service) : Controller
 {
     [HttpGet]
-    public async Task<Response<List<GetChooseUsDto>>> GetChooseUs([FromQuery] string language)
+    public async Task<Response<List<GetChooseUsDto>>> GetChooseUs([FromQuery] string language = "Ru")
     {
         return await service.GetChooseUsAsync(language);
     }
     [HttpGet("{id}")]
-    public async Task<Response<GetChooseUsDto>> GetChooseUsById(int id,[FromQuery]string language)
+    public async Task<Response<GetChooseUsDto>> GetChooseUsById(int id,[FromQuery]string language = "Ru")
     {
         return await service.GetChooseUsByIdAsync(id, language);
     }

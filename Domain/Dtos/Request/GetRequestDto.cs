@@ -7,4 +7,6 @@ public class GetRequestDto
     public string Phone { get; set; }
     public string FullName { get; set; }
     public string Question { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public bool IsApproved { get; set; }
 }

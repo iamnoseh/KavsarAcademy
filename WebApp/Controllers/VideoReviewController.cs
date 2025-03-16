@@ -12,7 +12,7 @@ namespace WebApp.Controllers;
 public class VideoReviewController(IVideoReviewService service) : Controller
 {
     [HttpGet]
-    public async Task<Response<List<GetVideoReview>>> GetVideoReview(string language = "En") => 
+    public async Task<Response<List<GetVideoReview>>> GetVideoReview(string language = "Ru") => 
         await service.GetVideoReviewsAsync(language);
     
     [HttpPost]
@@ -30,6 +30,6 @@ public class VideoReviewController(IVideoReviewService service) : Controller
         await service.DeleteReviewVideo(id);
 
     [HttpGet("id")]
-    public async Task<Response<GetVideoReview>> GetVideoReviewById(int id, string language = "En") =>
+    public async Task<Response<GetVideoReview>> GetVideoReviewById(int id, string language = "Ru") =>
         await service.GetVideoReviewByIdAsync(id, language);
 }

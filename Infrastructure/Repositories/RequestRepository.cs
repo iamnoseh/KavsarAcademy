@@ -38,4 +38,29 @@ public class RequestRepository(DataContext context) : IRequestRepository
         r.DeletedAt = DateTime.UtcNow;
         return await context.SaveChangesAsync();
     }
+
+    public async Task<Request?> GetApprovedRequest(int id)
+    {
+        var request = await context.Requests
+            .Where(x=> !x.IsDeleted && x.IsApproved)
+            .FirstOrDefaultAsync(x=>x.Id == id);
+        return request;
+    }
+
+    public async Task<int> ApprovedRequest(Request request)
+    {
+        var requests = await context.Requests
+            .Where(x=> !x.IsDeleted && x.IsApproved == false)
+            .FirstOrDefaultAsync(x=>x.Id == request.Id);
+        if (requests != null) request.IsApproved = true;
+        return await context.SaveChangesAsync();
+    }
+
+    public async Task<List<Request?>> GetApprovedRequests()
+    {
+        var requests = await context.Requests
+            .Where(x=> x.IsApproved && !x.IsDeleted)
+            .ToListAsync();
+        return requests;
+    }
 }

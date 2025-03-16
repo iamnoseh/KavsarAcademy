@@ -43,4 +43,17 @@ public class RequestController (IRequestService service) : Controller
     {
         return await service.DeleteRequestAsync(id);
     }
+    
+    [HttpPost("add-to-approved/{id}")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<Response<string>> ApproveRequest(int id) => 
+        await service.ApproveRequestAsync(id);
+
+    [HttpGet("approved/{id}")]
+    public async Task<Response<GetRequestDto>> GetApprovedRequest(int id) => 
+        await service.GetApprovedRequestsAsync(id);
+
+    [HttpGet("approveds")]
+    public async Task<Response<List<GetRequestDto>>> GetApprovedRequests() => 
+        await service.GetAllApprovedRequestsAsync();
 }

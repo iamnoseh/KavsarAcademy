@@ -10,4 +10,7 @@ public interface IRequestService
     Task<Response<string>> CreateRequestAsync(CreateRequestDto request);
     Task<Response<string>> UpdateRequestAsync(UpdateRequestDto request);
     Task<Response<string>> DeleteRequestAsync(int id);
+    Task<Response<string>> ApproveRequestAsync(int id);
+    Task<Response<List<GetRequestDto>>> GetAllApprovedRequestsAsync();
+    Task<Response<GetRequestDto>> GetApprovedRequestsAsync(int id);
 }
