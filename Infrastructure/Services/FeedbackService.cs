@@ -113,7 +113,8 @@ public class FeedbackService(IFeedbackRepository feedbackRepository,
             FullName = fullName,
             ProfileImagePath = profileImagePath,
             UserId = userId,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Grade = feedbackCreateDto.Grade
         };
 
         var result = await feedbackRepository.Create(feedback);

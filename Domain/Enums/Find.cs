@@ -5,8 +5,9 @@ public enum Find
     Instagram,
     Facebook,
     Google,
+    Telegram,
     Youtube,
-    LinkedIn,
     Friends,
+    Ad,
     Others
 }
