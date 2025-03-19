@@ -20,6 +20,7 @@ public class Feedback : BaseEntity
     
     public string? ProfileImagePath { get; set; }  // rasmi user agar doshta boshad
     
+    public bool Approved { get; set; }
     public int? UserId { get; set; }          
     public User? User { get; set; }
 }

@@ -7,4 +7,5 @@ public class FeedbackUpdateDto
     public string TextRu { get; set; }
     public string TextEn { get; set; }
     public int Grade { get; set; }
+    public bool Approved { get; set; }
 }

@@ -9,5 +9,6 @@ public class FeedbackGetDto
     public int Grade { get; set; }
     public string? FullName { get; set; }
     public string? ProfileImagePath { get; set; }
+    public bool Approved { get; set; }
 }
 

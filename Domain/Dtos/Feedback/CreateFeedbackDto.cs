@@ -9,4 +9,5 @@ public class FeedbackCreateDto
     public string TextEn { get; set; }
     public int Grade { get; set; }
     public string? FullName { get; set; }
+    public bool Approved { get; set; } = false;
 }

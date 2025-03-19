@@ -41,7 +41,8 @@ public class FeedbackService(IFeedbackRepository feedbackRepository,
                 Text = feedbackType.GetProperty("Text" + language)?.GetValue(feedback)?.ToString(),//zaboni muvofiqro memonad
                 Grade = feedback.Grade,
                 FullName = fullName,
-                ProfileImagePath = profileImagePath
+                ProfileImagePath = profileImagePath,
+                Approved = feedback.Approved,
             };
             feedbacksDto.Add(dto);
         }
@@ -76,7 +77,8 @@ public class FeedbackService(IFeedbackRepository feedbackRepository,
             Text = feedbackType.GetProperty("Text" + language)?.GetValue(feedback)?.ToString(),
             Grade = feedback.Grade,
             FullName = fullName,
-            ProfileImagePath = profileImagePath
+            ProfileImagePath = profileImagePath,
+            Approved = feedback.Approved
         };
         return new Response<FeedbackGetDto>(dto);
     }
@@ -114,7 +116,8 @@ public class FeedbackService(IFeedbackRepository feedbackRepository,
             ProfileImagePath = profileImagePath,
             UserId = userId,
             CreatedAt = DateTime.UtcNow,
-            Grade = feedbackCreateDto.Grade
+            Grade = feedbackCreateDto.Grade,
+            Approved = false
         };
 
         var result = await feedbackRepository.Create(feedback);
@@ -134,6 +137,7 @@ public class FeedbackService(IFeedbackRepository feedbackRepository,
         feedback.TextEn = feedbackUpdateDto.TextEn;
         feedback.Grade = feedbackUpdateDto.Grade;
         feedback.UpdatedAt = DateTime.UtcNow;
+        feedback.Approved = feedbackUpdateDto.Approved;
 
         var result = await feedbackRepository.Update(feedback);
         return result > 0
