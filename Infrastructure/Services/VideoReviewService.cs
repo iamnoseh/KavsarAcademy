@@ -84,6 +84,7 @@ public class VideoReviewService(
         };
         await context.VideoReviews.AddAsync(media);
         var result = await context.SaveChangesAsync();
+        await memoryCache.RemoveDataAsync(Key);
         return result > 0
             ? new Response<string>(HttpStatusCode.OK, "Video review saved")
             : new Response<string>(HttpStatusCode.InternalServerError, "Video review could not be saved");
@@ -120,6 +121,7 @@ public class VideoReviewService(
             media.ReviewPath = $"/uploads/VideoReviews/{uniqueFileName}";
         }
         var res = await context.SaveChangesAsync();
+        await memoryCache.RemoveDataAsync(Key);
         return res > 0
             ? new Response<string>(HttpStatusCode.OK, "VideoReview Updated Successfully")
             : new Response<string>(HttpStatusCode.InternalServerError, "Video review could not be updated");
@@ -131,6 +133,7 @@ public class VideoReviewService(
         if (deleteRequest is null) return new Response<string>(HttpStatusCode.NotFound,"Video review not found");
         context.VideoReviews.Remove(deleteRequest);
         var result = await context.SaveChangesAsync();
+        await memoryCache.RemoveDataAsync(Key);
         return result > 0
             ? new Response<string>(HttpStatusCode.OK, "Video review deleted")
             : new Response<string>(HttpStatusCode.InternalServerError, "Video review could not be deleted");
