@@ -12,7 +12,6 @@ namespace WebApp.Controllers;
 public class FeedbackController (IFeedbackService service) : ControllerBase
 {
     [HttpGet]
-    [Authorize(Roles = Roles.Admin)]
     public async Task<PaginationResponse<List<FeedbackGetDto>>> GetFeedbacks([FromQuery] BaseFilter filter,
         [FromQuery] string language = "Ru")
     {
