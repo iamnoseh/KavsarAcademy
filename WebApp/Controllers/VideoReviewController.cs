@@ -19,9 +19,9 @@ public class VideoReviewController(IVideoReviewService service) : Controller
     [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> CreateVideoReview(CreateVideoReview review) => 
         await service.CreateReviewVideo(review);
-    [HttpPut]
+    [HttpPut()]
     [Authorize(Roles = Roles.Admin)]
-    public async Task<Response<string>> UpdateVideoReview(UpdateVideoReview review) => 
+    public async Task<Response<string>> UpdateVideoReview([FromForm]UpdateVideoReview review) => 
         await service.UpdateReviewVideo(review);
 
     [HttpDelete]

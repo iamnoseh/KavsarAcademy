@@ -27,6 +27,7 @@ public class VideoReviewService(
                 return new Response<List<GetVideoReview>>(HttpStatusCode.NotFound,"Video reviews not found");
             reviews = videoReviews.Select(x => new GetVideoReview
             {
+                Id = x.Id,
                 ReviewerName = typeReview.GetProperty("ReviewerName" + language)?.GetValue(x).ToString(),
                 VideoReviewFile = x.ReviewPath,
             }).ToList();
@@ -43,6 +44,7 @@ public class VideoReviewService(
             return new Response<GetVideoReview>(HttpStatusCode.NotFound,"Video review not found");
         var dto = new GetVideoReview
         {
+            Id = review.Id,
             ReviewerName = typeReview.GetProperty("ReviewerName" + language)?.GetValue(review).ToString(),
             VideoReviewFile = review.ReviewPath,
         };

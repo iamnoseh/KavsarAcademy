@@ -6,6 +6,7 @@ namespace Domain.Entities;
 
 public class VideoReview : BaseEntity
 {
+    public int Id { get; set; }
     [Required]
     public string ReviewerNameTj { get; set; } = string.Empty;
     public string ReviewerNameRu { get; set; } = string.Empty;

@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class inits2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -207,6 +207,8 @@ namespace Infrastructure.Migrations
                     Phone = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Question = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Find = table.Column<int>(type: "integer", nullable: false),
+                    IsApproved = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -355,6 +357,7 @@ namespace Infrastructure.Migrations
                     FullName = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
                     Grade = table.Column<int>(type: "integer", nullable: false),
                     ProfileImagePath = table.Column<string>(type: "text", nullable: true),
+                    Approved = table.Column<bool>(type: "boolean", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
