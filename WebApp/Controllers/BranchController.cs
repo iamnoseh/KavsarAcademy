@@ -16,12 +16,12 @@ public class BranchController (IBranchService service) : Controller
         return await service.GetAllBranchesAsync(language);
     }
 
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> GetBranchById(int id, [FromQuery] string language = "Ru")
+    [HttpGet("branche")] 
+    public async Task<Response<GetBranchDto>> GetBranchById(int id, string language = "Ru")
     {
-        var response = await service.GetBranchByIdAsync(id, language);
-        return Ok(response);
+        return await service.GetBranchByIdAsync(id, language);
     }
+
 
     [HttpPost]
     [Authorize(Roles = Roles.Admin)]

@@ -29,6 +29,7 @@ public class CourseController(ICourseService service) : Controller
     {
         return await service.CreateCourseAsync(courseDto);
     }
+    
     [HttpPut("{id}")]
     [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> UpdateCourse([FromForm]UpdateCourseDto courseDto)

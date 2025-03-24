@@ -11,6 +11,8 @@ using Domain.Entities;
 using Infrastructure.ExtensionMethods.Register;
 using Infrastructure.Interfaces.Account;
 using Infrastructure.Interfaces.Gallery;
+using Infrastructure.Interfaces.Material;
+using Infrastructure.Interfaces.StudyInCourse;
 using Infrastructure.Interfaces.VideoReview;
 using Infrastructure.Profiles;
 using Infrastructure.Seed;
@@ -31,7 +33,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IAccountService>(sp =>
+builder.Services.AddScoped<IAccountService>(sp =>    
     new AccountService(
         sp.GetRequiredService<UserManager<User>>(),
         sp.GetRequiredService<RoleManager<IdentityRole<int>>>(),
@@ -75,6 +77,13 @@ builder.Services.AddScoped<IColleagueService>(cr =>
         cr.GetRequiredService<IColleagueRepository>(),
         uploadPath
     ));
+builder.Services.AddScoped<IMaterialService, MaterialService>();
+builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
+builder.Services.AddScoped<IStudyInCourseRepository, StudyInCourseRepository>();
+builder.Services.AddScoped<IStudyInCourseService>(sp => 
+    new StudyInCourseService(
+        sp.GetRequiredService<IStudyInCourseRepository>(),
+        uploadPath));
 
 
 builder.Services.AddScoped<INewsService>(nw=> 
@@ -194,5 +203,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 app.MapControllers();
 app.Run();

@@ -1,4 +1,5 @@
 using Domain.Dtos.BannerDto;
+using Domain.Responses;
 using Infrastructure.Interfaces.IServices;
 using Infrastructure.Seed;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +19,10 @@ public class BannerController(IBannerService bannerService) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetBannerById(int id, [FromQuery] string language = "Ru")
+    public async Task<Task<Response<GetBannerDto>>> GetBannerById(int id, [FromQuery] string language = "Ru")
     {
-        var response = await bannerService.GetBannerById(id, language);
-        return Ok(response);
+        return  bannerService.GetBannerById(id, language);
+        
     }
 
     [HttpPost]
