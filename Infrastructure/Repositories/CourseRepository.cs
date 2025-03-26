@@ -40,4 +40,26 @@ public class CourseRepository (DataContext context) : ICourseRepository
          deletedCourse.IsDeleted = true;
         return await context.SaveChangesAsync();
     }
+    
+    // Получение всех курсов с преподавателями, материалами и StudyInCourse
+    public async Task<List<Course>> GetCoursesWithDetails()
+    {
+        return await context.Courses
+            .Where(x => x.IsDeleted == false)
+            .Include(c => c.Colleague)
+            .Include(c => c.Materials)
+            .Include(c => c.StudyInCourses)
+            .ToListAsync();
+    }
+    
+    // Получение курса по ID с преподавателем, материалами и StudyInCourse
+    public async Task<Course?> GetCourseWithDetailsById(int id)
+    {
+        return await context.Courses
+            .Where(x => x.IsDeleted == false && x.Id == id)
+            .Include(c => c.Colleague)
+            .Include(c => c.Materials)
+            .Include(c => c.StudyInCourses)
+            .FirstOrDefaultAsync();
+    }
 }

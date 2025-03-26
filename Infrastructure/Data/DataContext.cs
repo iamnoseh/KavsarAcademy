@@ -20,6 +20,8 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<Gallery> Galleries { get; set; }
     public DbSet<Colleague> Colleagues { get; set; }
     public DbSet<VideoReview> VideoReviews { get; set; }
+    public DbSet<Material> Materials { get; set; }
+    public DbSet<StudyInCourse> StudyInCourses { get; set; }
     
     
     protected override void OnModelCreating(ModelBuilder builder)
@@ -30,6 +32,27 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
             .HasMany(c => c.PatternComments)
             .WithOne(c => c.PatternComment)
             .HasForeignKey(c => c.PatternCommentId)
+            .OnDelete(DeleteBehavior.Cascade);
+            
+        // Настройка отношения Course - Colleague (один к одному)
+        builder.Entity<Course>()
+            .HasOne(c => c.Colleague)
+            .WithMany(cl => cl.Courses)
+            .HasForeignKey(c => c.ColleagueId)
+            .OnDelete(DeleteBehavior.SetNull);
+            
+        // Настройка отношения Course - Material (один ко многим)
+        builder.Entity<Material>()
+            .HasOne(m => m.Course)
+            .WithMany(c => c.Materials)
+            .HasForeignKey(m => m.CourseId)
+            .OnDelete(DeleteBehavior.Cascade);
+            
+        // Настройка отношения Course - StudyInCourse (один ко многим)
+        builder.Entity<StudyInCourse>()
+            .HasOne(s => s.Course)
+            .WithMany(c => c.StudyInCourses)
+            .HasForeignKey(s => s.CourseId)
             .OnDelete(DeleteBehavior.Cascade);
     }
     

@@ -22,6 +22,7 @@ public class GalleryService (IGalleryRepository repository,
             var medias = await repository.GetAll();
             res = medias.Select(x => new GetMediaDto
             {
+                Id = x.Id,
                 MediaUrl = x.MediaUrl,
             }).ToList();
             await memoryCache.SetDataAsync(Key, res, 3600);
@@ -37,6 +38,7 @@ public class GalleryService (IGalleryRepository repository,
             return new Response<GetMediaDto>(HttpStatusCode.NotFound, "Media not found");
         var res = new GetMediaDto()
         {
+            Id = media.Id,
             MediaUrl = media.MediaUrl,
         };
         return new Response<GetMediaDto>(res);

@@ -15,6 +15,9 @@ public class CreateCourseDto
     public decimal Price { get; set; }
     public int Duration { get; set; }
     
+    // ID преподавателя (необязательное поле)
+    public int? ColleagueId { get; set; }
+    
     [NotMapped]
     public IFormFile Image { get; set; }
 }

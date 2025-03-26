@@ -20,4 +20,14 @@ public class Course : BaseEntity
     
     [NotMapped]
     public IFormFile Image { get; set; }
+    
+    // Связь с преподавателем (один преподаватель для курса)
+    public int? ColleagueId { get; set; }
+    public Colleague Colleague { get; set; }
+    
+    // Связь с материалами курса (множество материалов)
+    public List<Material> Materials { get; set; }
+    
+    // Связь с StudyInCourse (множество элементов)
+    public List<StudyInCourse> StudyInCourses { get; set; }
 }

@@ -41,8 +41,8 @@ public class BranchService(IBranchRepository branchRepository, IMapper mapper) :
         var branchDto = new GetBranchDto
         {
             Id = branch.Id,
-            BranchName = typeBranch.GetProperty("BranchName" + language)?.GetValue(branch)?.ToString(),
-            Address = typeBranch.GetProperty("Address" + language)?.GetValue(branch)?.ToString(),
+            BranchName = typeBranch.GetProperty("BranchName" + language)?.GetValue(branch).ToString(),
+            Address = typeBranch.GetProperty("Address" + language)?.GetValue(branch).ToString(),
             PhoneNumber = branch.PhoneNumber,
             Email = branch.Email
         };

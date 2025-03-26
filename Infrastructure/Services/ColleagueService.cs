@@ -21,6 +21,7 @@ public class ColleagueService(IColleagueRepository repository,
 
         var dto = colleagues.Select(x => new GetColleagueWhitKnowingIcons
         {
+            Id = x.Id,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(x)?.ToString() ?? string.Empty,
@@ -39,6 +40,7 @@ public class ColleagueService(IColleagueRepository repository,
 
         var dto = new GetColleagueWhitKnowingIcons
         {
+            Id = colleague.Id,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
             LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
@@ -57,6 +59,7 @@ public class ColleagueService(IColleagueRepository repository,
 
         var dto = new GetColleague
         {
+            Id = colleague.Id,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
             LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
             About = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),

@@ -21,4 +21,7 @@ public class Colleague : BaseEntity
     [NotMapped]
     public IFormFile ImageFile { get; set; }
     public List<string> Icons { get; set; }
+    
+    // Навигационное свойство для курсов этого преподавателя
+    public List<Course> Courses { get; set; }
 }
