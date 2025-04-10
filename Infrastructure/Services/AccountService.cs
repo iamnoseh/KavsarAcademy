@@ -82,7 +82,7 @@ namespace Infrastructure.Services
 
             var isPasswordValid = await userManager.CheckPasswordAsync(user, login.Password);
             if (!isPasswordValid)
-                return new Response<string>(HttpStatusCode.BadRequest, "Invalid password");
+                return new Response<string>(HttpStatusCode.BadRequest, "Invalid login or password");
 
             var token = await GenerateJwtToken(user);
             return new Response<string>(token) { Message = "Login successful" };

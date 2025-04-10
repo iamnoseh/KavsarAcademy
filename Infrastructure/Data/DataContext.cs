@@ -2,6 +2,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data;
 
@@ -20,10 +21,6 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<Gallery> Galleries { get; set; }
     public DbSet<Colleague> Colleagues { get; set; }
     public DbSet<VideoReview> VideoReviews { get; set; }
-    public DbSet<Material> Materials { get; set; }
-    public DbSet<StudyInCourse> StudyInCourses { get; set; }
-    
-    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder); 
@@ -40,20 +37,16 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
             .WithMany(cl => cl.Courses)
             .HasForeignKey(c => c.ColleagueId)
             .OnDelete(DeleteBehavior.SetNull);
-            
-        // Настройка отношения Course - Material (один ко многим)
-        builder.Entity<Material>()
-            .HasOne(m => m.Course)
-            .WithMany(c => c.Materials)
-            .HasForeignKey(m => m.CourseId)
-            .OnDelete(DeleteBehavior.Cascade);
-            
-        // Настройка отношения Course - StudyInCourse (один ко многим)
-        builder.Entity<StudyInCourse>()
-            .HasOne(s => s.Course)
-            .WithMany(c => c.StudyInCourses)
-            .HasForeignKey(s => s.CourseId)
-            .OnDelete(DeleteBehavior.Cascade);
+        
+        var splitStringConverter = new ValueConverter<List<string>, string>(
+            v => string.Join(";", v),  // Табакил кардани рӯйхат ба як сатри един
+            v => v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList()
+        );
+
+        builder.Entity<Course>()
+            .Property(c => c.Materials)
+            .HasConversion(splitStringConverter);
+       
     }
     
 }

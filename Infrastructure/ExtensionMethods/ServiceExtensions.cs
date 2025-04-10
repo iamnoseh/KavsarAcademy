@@ -1,11 +1,8 @@
-using Domain.Entities;
-using Infrastructure.Data;
+
 using Infrastructure.Interfaces;
-using Infrastructure.Interfaces.Material;
-using Infrastructure.Interfaces.StudyInCourse;
+
 using Infrastructure.Repositories;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.ExtensionMethods;
@@ -20,7 +17,7 @@ public static class ServiceExtensions
         // Регистрация репозиториев и сервисов
         services.AddCourseServices(uploadPath);
         services.AddMaterialServices();
-        services.AddStudyInCourseServices(uploadPath);
+        // services.AddStudyInCourseServices(uploadPath);
         services.AddColleagueServices(uploadPath);
         services.AddGalleryServices(uploadPath);
         services.AddNewsServices();
@@ -55,8 +52,8 @@ public static class ServiceExtensions
     public static IServiceCollection AddMaterialServices(this IServiceCollection services)
     {
         // Регистрация репозитория и сервиса материалов
-        services.AddScoped<IMaterialRepository, MaterialRepository>();
-        services.AddScoped<IMaterialService, MaterialService>();
+        // services.AddScoped<IMaterialRepository, MaterialRepository>();
+        // services.AddScoped<IMaterialService, MaterialService>();
         
         return services;
     }
@@ -64,21 +61,7 @@ public static class ServiceExtensions
     /// <summary>
     /// Регистрирует сервисы для работы с StudyInCourse
     /// </summary>
-    public static IServiceCollection AddStudyInCourseServices(this IServiceCollection services, string uploadPath)
-    {
-        // Регистрация репозитория и сервиса StudyInCourse
-        services.AddScoped<IStudyInCourseRepository, StudyInCourseRepository>();
-        
-        // Передача uploadPath для сохранения изображений
-        services.AddScoped<IStudyInCourseService>(provider => 
-            new StudyInCourseService(
-                provider.GetRequiredService<IStudyInCourseRepository>(),
-                uploadPath
-            )
-        );
-        
-        return services;
-    }
+   
     
     /// <summary>
     /// Регистрирует сервисы для работы с преподавателями (Colleague)

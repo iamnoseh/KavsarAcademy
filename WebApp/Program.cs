@@ -11,8 +11,6 @@ using Domain.Entities;
 using Infrastructure.ExtensionMethods.Register;
 using Infrastructure.Interfaces.Account;
 using Infrastructure.Interfaces.Gallery;
-using Infrastructure.Interfaces.Material;
-using Infrastructure.Interfaces.StudyInCourse;
 using Infrastructure.Interfaces.VideoReview;
 using Infrastructure.Profiles;
 using Infrastructure.Seed;
@@ -67,7 +65,7 @@ builder.Services.AddScoped<IVideoReviewService>(sp => new VideoReviewService(
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseService>(cr => 
     new CourseService(
-    cr.GetRequiredService<ICourseRepository>(),
+        cr.GetRequiredService<ICourseRepository>(),
         uploadPath
     ));
 
@@ -77,13 +75,6 @@ builder.Services.AddScoped<IColleagueService>(cr =>
         cr.GetRequiredService<IColleagueRepository>(),
         uploadPath
     ));
-builder.Services.AddScoped<IMaterialService, MaterialService>();
-builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
-builder.Services.AddScoped<IStudyInCourseRepository, StudyInCourseRepository>();
-builder.Services.AddScoped<IStudyInCourseService>(sp => 
-    new StudyInCourseService(
-        sp.GetRequiredService<IStudyInCourseRepository>(),
-        uploadPath));
 
 
 builder.Services.AddScoped<INewsService>(nw=> 

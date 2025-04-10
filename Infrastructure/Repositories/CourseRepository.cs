@@ -47,8 +47,6 @@ public class CourseRepository (DataContext context) : ICourseRepository
         return await context.Courses
             .Where(x => x.IsDeleted == false)
             .Include(c => c.Colleague)
-            .Include(c => c.Materials)
-            .Include(c => c.StudyInCourses)
             .ToListAsync();
     }
     
@@ -58,8 +56,6 @@ public class CourseRepository (DataContext context) : ICourseRepository
         return await context.Courses
             .Where(x => x.IsDeleted == false && x.Id == id)
             .Include(c => c.Colleague)
-            .Include(c => c.Materials)
-            .Include(c => c.StudyInCourses)
             .FirstOrDefaultAsync();
     }
 }

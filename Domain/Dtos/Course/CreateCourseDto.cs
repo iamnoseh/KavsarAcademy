@@ -17,7 +17,7 @@ public class CreateCourseDto
     
     // ID преподавателя (необязательное поле)
     public int? ColleagueId { get; set; }
-    
+    public List<string>? Materials { get; set; }
     [NotMapped]
     public IFormFile Image { get; set; }
 }
