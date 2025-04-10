@@ -25,6 +25,7 @@ public class NewsService (INewsRepository repository,
             {
                 Id = x.Id,
                 Title = newsType.GetProperty("Title" + language)?.GetValue(x)?.ToString(),
+                Summary = newsType.GetProperty("Summary" + language)?.GetValue(x)?.ToString(),
                 Content = newsType.GetProperty("Content" + language)?.GetValue(x)?.ToString(),
                 CreatedAt = x.CreatedAt,
                 LikeCount = x.Likes.Count,
@@ -48,6 +49,7 @@ public class NewsService (INewsRepository repository,
         {
             Id = news.Id,
             Title = newsType.GetProperty("Title" + language)?.GetValue(news)?.ToString(),
+            Summary = newsType.GetProperty("Summary" + language)?.GetValue(news)?.ToString(),
             Content = newsType.GetProperty("Content" + language)?.GetValue(news)?.ToString(),
             CreatedAt = news.CreatedAt,
             LikeCount = news.Likes.Count,
@@ -89,6 +91,9 @@ public class NewsService (INewsRepository repository,
             ContentTj = request.ContentTj,
             ContentRu = request.ContentRu,
             ContentEn = request.ContentEn,
+            SummaryEn = request.SummaryEn,
+            SummaryRu = request.SummaryRu,
+            SummaryTj = request.SummaryTj,
             CreatedAt = DateTime.UtcNow,
             MediaUrl = $"/uploads/news/{uniqueFileName}"
         };
@@ -113,6 +118,10 @@ public class NewsService (INewsRepository repository,
         oldNews.ContentTj = request.ContentTj;
         oldNews.ContentRu = request.ContentRu;
         oldNews.ContentEn = request.ContentEn;
+
+        oldNews.SummaryEn = request.SummaryEn;
+        oldNews.SummaryRu = request.SummaryRu;
+        oldNews.SummaryTj = request.SummaryTj;
         oldNews.UpdatedAt = DateTime.UtcNow;
 
         {

@@ -8,17 +8,26 @@ namespace Domain.Entities;
 public class News : BaseEntity
 {
     [Required]
-    [MaxLength(100, ErrorMessage = "Title cannot be longer than 100 characters.")]
+    [MaxLength(150, ErrorMessage = "Title cannot be longer than 150 characters.")]
     public string TitleTj { get; set; }
 
     [Required]
-    [MaxLength(100, ErrorMessage = "Title cannot be longer than 100 characters.")]
+    [MaxLength(150, ErrorMessage = "Title cannot be longer than 150 characters.")]
     public string TitleRu { get; set; }
 
     [Required]
-    [MaxLength(100, ErrorMessage = "Title cannot be longer than 100 characters.")]
+    [MaxLength(150, ErrorMessage = "Title cannot be longer than 150 characters.")]
     public string TitleEn { get; set; }
 
+    [Required]
+    [MaxLength(300, ErrorMessage = "Title cannot be longer than 300 characters.")]
+    public string SummaryTj { get; set; } = string.Empty;
+    [Required]
+    [MaxLength(300, ErrorMessage = "Title cannot be longer than 300 characters.")]
+    public string SummaryRu { get; set; } = string.Empty;
+    [Required]
+    [MaxLength(300, ErrorMessage = "Title cannot be longer than 300 characters.")]
+    public string SummaryEn { get; set; } = string.Empty;
     [Required]
     public string ContentTj { get; set; }
 

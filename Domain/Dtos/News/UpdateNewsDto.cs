@@ -11,6 +11,9 @@ public class UpdateNewsDto
     public string TitleRu { get; set; }
     [Required, MaxLength(100)]
     public string TitleEn { get; set; }
+    public string SummaryTj { get; set; } = String.Empty;
+    public string SummaryRu { get; set; } = String.Empty;
+    public string SummaryEn { get; set; } = String.Empty;
 
     [Required]
     public string ContentTj { get; set; }
