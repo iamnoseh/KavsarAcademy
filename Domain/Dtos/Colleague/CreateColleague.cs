@@ -12,6 +12,9 @@ public class CreateColleague
     public string AbouteTj { get; set; }
     public string AbouteRu { get; set; }
     public string AbouteEn { get; set; }
+    public string? RoleTj { get; set; }
+    public string? RoleRu { get; set; }
+    public string? RoleEn { get; set; } 
     public IFormFile ImageFile { get; set; }
     public List<IFormFile> IconFiles { get; set; } // Барои иконҳо
 }

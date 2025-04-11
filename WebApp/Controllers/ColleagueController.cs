@@ -17,7 +17,7 @@ public class ColleagueController (IColleagueService service) : ControllerBase
     
     [HttpPost]
     [Authorize(Roles = Roles.Admin)]
-    public async Task<Response<string>> CreateColleague(CreateColleague request) =>
+    public async Task<Response<string>> CreateColleague([FromForm]CreateColleague request) =>
         await service.CreateColleague(request);
    
     [HttpGet("{id}")]

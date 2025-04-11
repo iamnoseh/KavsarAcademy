@@ -25,6 +25,7 @@ public class ColleagueService(IColleagueRepository repository,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(x)?.ToString() ?? string.Empty,
+            Role = colleagueType.GetProperty("Role" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             ProfileImagePath = x.ImagePath,
             KnowingIcons = x.Icons.ToList()
         }).ToList();
@@ -44,6 +45,7 @@ public class ColleagueService(IColleagueRepository repository,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
             LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
+            Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
             ProfileImagePath = colleague.ImagePath,
             KnowingIcons = colleague.Icons.ToList()
         };
@@ -63,6 +65,7 @@ public class ColleagueService(IColleagueRepository repository,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
             LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
             About = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
+            Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
             ProfileImage = colleague.ImagePath,
         };
         return new Response<GetColleague>(dto);
@@ -103,6 +106,9 @@ public class ColleagueService(IColleagueRepository repository,
             AbouteRu = request.AbouteRu,
             AbouteEn = request.AbouteEn,
             CreatedAt = DateTime.UtcNow,
+            RoleEn = request.RoleEn,
+            RoleRu = request.RoleRu,
+            RoleTj = request.RoleTj,
             ImagePath = $"/uploads/Colleague/{uniqueFileName}",
             Icons = new List<string>()
         };
@@ -155,6 +161,10 @@ public class ColleagueService(IColleagueRepository repository,
     colleague.AbouteTj = request.AbouteTj;
     colleague.AbouteRu = request.AbouteRu;
     colleague.AbouteEn = request.AbouteEn;
+    colleague.RoleEn = request.RoleEn;
+    colleague.RoleRu = request.RoleRu;
+    colleague.RoleTj = request.RoleTj;
+    
     
     if (request.ProfileImage != null && request.ProfileImage.Length > 0)
     {

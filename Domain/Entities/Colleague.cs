@@ -17,6 +17,9 @@ public class Colleague : BaseEntity
     public string AbouteRu { get; set; }
     public string AbouteEn { get; set; }
   
+    public string? RoleTj { get; set; }
+    public string? RoleRu { get; set; }
+    public string? RoleEn { get; set; } 
     public string ImagePath { get; set; }
     [NotMapped]
     public IFormFile ImageFile { get; set; }

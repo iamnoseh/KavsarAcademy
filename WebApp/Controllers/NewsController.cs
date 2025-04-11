@@ -19,17 +19,18 @@ public class NewsController(INewsService service) : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = Roles.Admin)]
-    public async Task<Response<string>> CreateNews([FromForm]CreateNewsDto newsDto)
+    public async Task<Response<string>> CreateNews([FromForm] CreateNewsDto newsDto)
     {
         return await service.CreateNewsAsync(newsDto);
     }
-    
+
     [HttpPut]
     [Authorize(Roles = Roles.Admin)]
-    public async Task<Response<string>> UpdateNews([FromForm]UpdateNewsDto newsDto)
+    public async Task<Response<string>> UpdateNews([FromForm] UpdateNewsDto newsDto)
     {
         return await service.UpdateNewsAsync(newsDto);
     }
+
     [HttpDelete]
     [Authorize(Roles = Roles.Admin)]
     public async Task<Response<string>> DeleteNews(int id)
@@ -38,9 +39,8 @@ public class NewsController(INewsService service) : ControllerBase
     }
 
     [HttpGet("id")]
-    public async Task<Response<GetNewsDto>> GetNews(int id,string language = "Ru")
+    public async Task<Response<GetNewsDto>> GetNews(int id, string language = "Ru")
     {
         return await service.GetNewsByIdAsync(id, language);
     }
-    
 }
