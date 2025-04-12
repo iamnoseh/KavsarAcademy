@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Domain.Enums;
-
 namespace Domain.Entities;
 
 public class Request : BaseEntity
@@ -15,6 +13,6 @@ public class Request : BaseEntity
     public string FullName { get; set; }
     [StringLength(200,MinimumLength = 5, ErrorMessage = "Question must be between 5 and 200 characters")]
     public string Question { get; set; }
-    public Find Find { get; set; }
+    public string Find { get; set; }
     public bool IsApproved { get; set; } = false;
 }

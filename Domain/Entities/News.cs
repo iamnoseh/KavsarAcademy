@@ -20,28 +20,33 @@ public class News : BaseEntity
     public string TitleEn { get; set; }
 
     [Required]
-    [MaxLength(300, ErrorMessage = "Title cannot be longer than 300 characters.")]
+    [MaxLength(300, ErrorMessage = "Summary cannot be longer than 300 characters.")]
     public string SummaryTj { get; set; } = string.Empty;
+
     [Required]
-    [MaxLength(300, ErrorMessage = "Title cannot be longer than 300 characters.")]
+    [MaxLength(300, ErrorMessage = "Summary cannot be longer than 300 characters.")]
     public string SummaryRu { get; set; } = string.Empty;
+
     [Required]
-    [MaxLength(300, ErrorMessage = "Title cannot be longer than 300 characters.")]
+    [MaxLength(300, ErrorMessage = "Summary cannot be longer than 300 characters.")]
     public string SummaryEn { get; set; } = string.Empty;
+
     [Required]
     public string ContentTj { get; set; }
 
-    [Required] 
+    [Required]
     public string ContentEn { get; set; }
 
     [Required]
     public string ContentRu { get; set; }
 
     [Required]
-    public int UserId { get; set; }
+    [MaxLength(50, ErrorMessage = "Category cannot be longer than 50 characters.")]
+    public string Category { get; set; } // Добавляем Category
 
-    [ForeignKey("UserId")] 
-    public virtual User User { get; set; } = null!; 
+    [Required]
+    [MaxLength(50, ErrorMessage = "Author cannot be longer than 50 characters.")]
+    public string Author { get; set; } // Добавляем Author, заменяем User
 
     public string? MediaUrl { get; set; }
 
@@ -51,6 +56,6 @@ public class News : BaseEntity
     public List<Comment> Comments { get; set; } = new();
     public List<Like> Likes { get; set; } = new();
 
-    [NotMapped] 
+    [NotMapped]
     public int LikeCount => Likes?.Count ?? 0;
 }

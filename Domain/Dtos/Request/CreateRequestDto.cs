@@ -1,5 +1,3 @@
-using Domain.Enums;
-
 namespace Domain.Dtos.Request;
 
 public class CreateRequestDto
@@ -8,5 +6,5 @@ public class CreateRequestDto
     public string Phone { get; set; }
     public string FullName { get; set; }
     public string Question { get; set; }
-    public Find Find { get; set; }
+    public string Find { get; set; }
 }
