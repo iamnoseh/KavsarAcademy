@@ -4,7 +4,7 @@ using Domain.Entities;
 using Domain.Responses;
 using Infrastructure.Interfaces;
 using Infrastructure.Services.Memory;
-using Ganss.XSS; // Для санитизации HTML
+using Ganss.XSS;
 
 namespace Infrastructure.Services;
 
@@ -15,8 +15,9 @@ public class NewsService : INewsService
     private readonly string uploadPath;
     private readonly HtmlSanitizer sanitizer;
     private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
-    private const long MaxFileSize = 100 * 1024 * 1024; // 100MB
+    private const long MaxFileSize = 100 * 1024 * 1024;
     private const string Key = "news";
+    private readonly string[] supportedLanguages = { "Tj", "Ru", "En" };
 
     public NewsService(INewsRepository repository, IRedisMemoryCache memoryCache, string uploadPath)
     {
@@ -34,8 +35,10 @@ public class NewsService : INewsService
 
     public async Task<Response<List<GetNewsDto>>> GetNewsAsync(string language = "En")
     {
+        var cacheKey = $"{Key}_{language}";
         var newsType = typeof(News);
-        var news = await memoryCache.GetDataAsync<List<GetNewsDto>>(Key);
+
+        var news = await memoryCache.GetDataAsync<List<GetNewsDto>>(cacheKey);
         if (news == null)
         {
             var newsData = await repository.GetAllNews();
@@ -51,7 +54,8 @@ public class NewsService : INewsService
                 Category = x.Category,
                 Author = x.Author,
             }).ToList();
-            await memoryCache.SetDataAsync(Key, news, 10);
+
+            await memoryCache.SetDataAsync(cacheKey, news, 10);
         }
 
         return new Response<List<GetNewsDto>>(news);
@@ -72,7 +76,6 @@ public class NewsService : INewsService
             Content = newsType.GetProperty("Content" + language)?.GetValue(news)?.ToString(),
             CreatedAt = news.CreatedAt,
             LikeCount = news.Likes.Count,
-            
             MediaUrl = news.MediaUrl,
             Category = news.Category,
             Author = news.Author
@@ -92,7 +95,6 @@ public class NewsService : INewsService
         if (!_allowedExtensions.Contains(fileExtension))
             return new Response<string>(HttpStatusCode.BadRequest, "Invalid file format. Allowed formats: .jpg, .jpeg, .png, .gif");
 
-        // Санитизируем content для каждого языка
         var sanitizedContentTj = sanitizer.Sanitize(request.ContentTj);
         var sanitizedContentRu = sanitizer.Sanitize(request.ContentRu);
         var sanitizedContentEn = sanitizer.Sanitize(request.ContentEn);
@@ -114,7 +116,6 @@ public class NewsService : INewsService
 
         var news = new News
         {
-            
             TitleTj = request.TitleTj,
             TitleRu = request.TitleRu,
             TitleEn = request.TitleEn,
@@ -133,7 +134,7 @@ public class NewsService : INewsService
         int res = await repository.CreateNews(news);
         if (res > 0)
         {
-            await memoryCache.RemoveDataAsync(Key);
+            await ClearAllNewsCacheAsync();
             return new Response<string>(HttpStatusCode.Created, "News created");
         }
         return new Response<string>(HttpStatusCode.BadRequest, "Something went wrong");
@@ -145,7 +146,6 @@ public class NewsService : INewsService
         if (oldNews == null)
             return new Response<string>(HttpStatusCode.NotFound, "News not found");
 
-        // Санитизируем content для каждого языка
         var sanitizedContentTj = sanitizer.Sanitize(request.ContentTj);
         var sanitizedContentRu = sanitizer.Sanitize(request.ContentRu);
         var sanitizedContentEn = sanitizer.Sanitize(request.ContentEn);
@@ -181,12 +181,12 @@ public class NewsService : INewsService
 
             var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await request.Media.CopyToAsync(fileStream);
             }
 
-            // Удаляем старый файл
             if (!string.IsNullOrEmpty(oldNews.MediaUrl))
             {
                 var oldFilePath = Path.Combine(uploadPath, oldNews.MediaUrl.TrimStart('/'));
@@ -200,9 +200,10 @@ public class NewsService : INewsService
         var res = await repository.UpdateNews(oldNews);
         if (res > 0)
         {
-            await memoryCache.RemoveDataAsync(Key);
+            await ClearAllNewsCacheAsync();
             return new Response<string>(HttpStatusCode.NoContent, "News updated");
         }
+
         return new Response<string>(HttpStatusCode.BadRequest, "Something went wrong");
     }
 
@@ -212,7 +213,6 @@ public class NewsService : INewsService
         if (deletedNews == null)
             return new Response<string>(HttpStatusCode.NotFound, "News not found");
 
-        // Удаляем связанный файл
         if (!string.IsNullOrEmpty(deletedNews.MediaUrl))
         {
             var filePath = Path.Combine(uploadPath, deletedNews.MediaUrl.TrimStart('/'));
@@ -223,9 +223,18 @@ public class NewsService : INewsService
         int res = await repository.DeleteNews(deletedNews);
         if (res > 0)
         {
-            await memoryCache.RemoveDataAsync(Key);
+            await ClearAllNewsCacheAsync();
             return new Response<string>(HttpStatusCode.NoContent, "News deleted");
         }
+
         return new Response<string>(HttpStatusCode.BadRequest, "Something went wrong");
+    }
+
+    private async Task ClearAllNewsCacheAsync()
+    {
+        foreach (var lang in supportedLanguages)
+        {
+            await memoryCache.RemoveDataAsync($"{Key}_{lang}");
+        }
     }
 }
