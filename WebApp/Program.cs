@@ -1,21 +1,21 @@
-using Infrastructure.Data;
-using Infrastructure.Interfaces;
-using Infrastructure.Interfaces.IServices;
-using Infrastructure.Repositories;
-using Infrastructure.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using System.Text;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Data;
 using Infrastructure.ExtensionMethods.Register;
+using Infrastructure.Interfaces;
 using Infrastructure.Interfaces.Account;
 using Infrastructure.Interfaces.Gallery;
+using Infrastructure.Interfaces.IServices;
 using Infrastructure.Interfaces.VideoReview;
 using Infrastructure.Profiles;
+using Infrastructure.Repositories;
 using Infrastructure.Seed;
+using Infrastructure.Services;
 using Infrastructure.Services.Memory;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -26,25 +26,37 @@ var builder = WebApplication.CreateBuilder(args);
 // Барои дастрасии ҳар корбар ба маълумоти худ
 builder.Services.AddHttpContextAccessor();
 
-// Танзимоти CORS
+// Танзимоти CORS:
+// Агар муҳити рушд (Development) бошад, домени localhost илова мешавад,
+// агар production бошад, танҳо доменҳои воқеӣ иҷозат дода мешаванд.
+var allowedOrigins = new List<string>
+{
+    "https://kavsaracademy.tj",
+    "https://www.kavsaracademy.tj"
+};
+if (builder.Environment.IsDevelopment())
+{
+    allowedOrigins.Add("http://localhost:5173");
+}
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost5173", builder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        builder.WithOrigins("http://localhost:5173") // Иҷозат ба фронтенд
-               .AllowAnyMethod() // Иҷозат ба ҳама методҳо (GET, POST, ва ғ.)
-               .AllowAnyHeader() // Иҷозат ба ҳама сарлавҳаҳо
-               .AllowCredentials(); // Барои кукиҳо ё аутентификатсия
+        policy.WithOrigins(allowedOrigins.ToArray())
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
-// DbContext
+// DbContext ва сабти хизматрасонӣ барои Identity ва дигар сервисҳо
 builder.Services.AddRegisterService(builder.Configuration);
 builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IAccountService>(sp =>    
+builder.Services.AddScoped<IAccountService>(sp =>
     new AccountService(
         sp.GetRequiredService<UserManager<User>>(),
         sp.GetRequiredService<RoleManager<IdentityRole<int>>>(),
@@ -53,6 +65,7 @@ builder.Services.AddScoped<IAccountService>(sp =>
     ));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 var uploadPath = builder.Configuration.GetValue<string>("UploadPath") ?? "wwwroot";
 builder.Services.AddScoped<IUserService>(sp =>
     new UserService(
@@ -67,10 +80,10 @@ builder.Services.AddScoped<IChooseUsService>(sp =>
     new ChooseUsService(
         sp.GetRequiredService<IChooseUsRepository>(),
         sp.GetRequiredService<IMapper>(),
-        uploadPath 
+        uploadPath
     ));
 
-builder.Services.AddScoped<IVideoReviewService>(sp => 
+builder.Services.AddScoped<IVideoReviewService>(sp =>
     new VideoReviewService(
         sp.GetRequiredService<DataContext>(),
         sp.GetRequiredService<IRedisMemoryCache>(),
@@ -78,37 +91,46 @@ builder.Services.AddScoped<IVideoReviewService>(sp =>
     ));
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<ICourseService>(cr => 
+builder.Services.AddScoped<ICourseService>(sp =>
     new CourseService(
-        cr.GetRequiredService<ICourseRepository>(),
+        sp.GetRequiredService<ICourseRepository>(),
         uploadPath
     ));
 
 builder.Services.AddScoped<IColleagueRepository, ColleagueRepository>();
-builder.Services.AddScoped<IColleagueService>(cr => 
+builder.Services.AddScoped<IColleagueService>(sp =>
     new ColleagueService(
-        cr.GetRequiredService<IColleagueRepository>(),
+        sp.GetRequiredService<IColleagueRepository>(),
         uploadPath
     ));
 
-builder.Services.AddScoped<INewsService>(nw => 
+builder.Services.AddScoped<INewsService>(sp =>
     new NewsService(
-        nw.GetRequiredService<INewsRepository>(),
-        nw.GetRequiredService<IRedisMemoryCache>(),
+        sp.GetRequiredService<INewsRepository>(),
+        sp.GetRequiredService<IRedisMemoryCache>(),
         uploadPath
     ));
 
 builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
-builder.Services.AddScoped<IGalleryService>(nw => 
+builder.Services.AddScoped<IGalleryService>(sp =>
     new GalleryService(
-        nw.GetRequiredService<IGalleryRepository>(),
-        nw.GetRequiredService<IRedisMemoryCache>(),
+        sp.GetRequiredService<IGalleryRepository>(),
+        sp.GetRequiredService<IRedisMemoryCache>(),
         uploadPath
     ));
 
+builder.Services.AddScoped<IBannerService>(sp =>
+    new BannerService(
+        sp.GetRequiredService<IBannerRepository>(),
+        builder.Environment.WebRootPath
+    )
+);
+
+// AutoMapper ва кеш
 builder.Services.AddAutoMapper(typeof(EntityProfile));
 builder.Services.AddMemoryCache();
 
+// Танзимоти аутентификатсияи JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -124,7 +146,9 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Error")))
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Error"))
+        )
     };
 });
 
@@ -149,23 +173,16 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            []
+            new string[] { }
         }
     });
 });
 
 builder.Services.AddControllers();
 
-var env = builder.Environment;
-builder.Services.AddScoped<IBannerService>(sp =>
-    new BannerService(
-        sp.GetRequiredService<IBannerRepository>(),
-        env.WebRootPath
-    )
-);
-
 var app = builder.Build();
 
+// Ислиҳоти иттилоотҳои база ва илова кардани роли ва корбарон
 try
 {
     using var scope = app.Services.CreateScope();
@@ -182,23 +199,24 @@ catch (Exception e)
     Console.WriteLine(e.Message);
 }
 
-// Настройка статических файлов
+// Танзимоти статикӣ
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")
+    ),
     RequestPath = ""
 });
 
-// Истифодаи CORS
-app.UseCors("AllowLocalhost5173");
+// Истифодаи CORS бо калиди "AllowFrontend"
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {  
-        c.AddThemes(app);  
+        c.AddThemes(app);
     });
 }
 
@@ -206,10 +224,10 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-app.MapControllers();
 
 app.Run();
