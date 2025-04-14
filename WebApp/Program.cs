@@ -21,10 +21,23 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SwaggerThemes;
 
-
 var builder = WebApplication.CreateBuilder(args);
-//baroi dastrasii har user ba dannihoi khud
+
+// Барои дастрасии ҳар корбар ба маълумоти худ
 builder.Services.AddHttpContextAccessor();
+
+// Танзимоти CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5173", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173") // Иҷозат ба фронтенд
+               .AllowAnyMethod() // Иҷозат ба ҳама методҳо (GET, POST, ва ғ.)
+               .AllowAnyHeader() // Иҷозат ба ҳама сарлавҳаҳо
+               .AllowCredentials(); // Барои кукиҳо ё аутентификатсия
+    });
+});
+
 // DbContext
 builder.Services.AddRegisterService(builder.Configuration);
 builder.Services.AddIdentity<User, IdentityRole<int>>()
@@ -49,6 +62,7 @@ builder.Services.AddScoped<IUserService>(sp =>
         sp.GetRequiredService<UserManager<User>>(),
         uploadPath
     ));
+
 builder.Services.AddScoped<IChooseUsService>(sp =>
     new ChooseUsService(
         sp.GetRequiredService<IChooseUsRepository>(),
@@ -56,11 +70,12 @@ builder.Services.AddScoped<IChooseUsService>(sp =>
         uploadPath 
     ));
 
-builder.Services.AddScoped<IVideoReviewService>(sp => new VideoReviewService(
-    sp.GetRequiredService<DataContext>(),
-    sp.GetRequiredService<IRedisMemoryCache>(),
-    uploadPath
-));
+builder.Services.AddScoped<IVideoReviewService>(sp => 
+    new VideoReviewService(
+        sp.GetRequiredService<DataContext>(),
+        sp.GetRequiredService<IRedisMemoryCache>(),
+        uploadPath
+    ));
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseService>(cr => 
@@ -76,16 +91,15 @@ builder.Services.AddScoped<IColleagueService>(cr =>
         uploadPath
     ));
 
-
-builder.Services.AddScoped<INewsService>(nw=> 
+builder.Services.AddScoped<INewsService>(nw => 
     new NewsService(
         nw.GetRequiredService<INewsRepository>(),
         nw.GetRequiredService<IRedisMemoryCache>(),
-            uploadPath
-        ));
+        uploadPath
+    ));
 
 builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
-builder.Services.AddScoped<IGalleryService>(nw=> 
+builder.Services.AddScoped<IGalleryService>(nw => 
     new GalleryService(
         nw.GetRequiredService<IGalleryRepository>(),
         nw.GetRequiredService<IRedisMemoryCache>(),
@@ -94,7 +108,6 @@ builder.Services.AddScoped<IGalleryService>(nw=>
 
 builder.Services.AddAutoMapper(typeof(EntityProfile));
 builder.Services.AddMemoryCache();
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -143,7 +156,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddControllers();
 
-
 var env = builder.Environment;
 builder.Services.AddScoped<IBannerService>(sp =>
     new BannerService(
@@ -154,7 +166,6 @@ builder.Services.AddScoped<IBannerService>(sp =>
 
 var app = builder.Build();
 
-
 try
 {
     using var scope = app.Services.CreateScope();
@@ -162,7 +173,6 @@ try
     var dataContext = serviceProvider.GetRequiredService<DataContext>();
     await dataContext.Database.MigrateAsync();
     Console.WriteLine("Database migrated successfully.");
-    await dataContext.Database.MigrateAsync();
     var seeder = serviceProvider.GetRequiredService<SeedData>();
     await seeder.SeedRole();
     await seeder.SeedUser();
@@ -180,10 +190,12 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = ""
 });
 
+// Истифодаи CORS
+app.UseCors("AllowLocalhost5173");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    // app.UseSwaggerUI();
     app.UseSwaggerUI(c =>
     {  
         c.AddThemes(app);  
@@ -199,4 +211,5 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 app.MapControllers();
+
 app.Run();
