@@ -23,12 +23,10 @@ using SwaggerThemes;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Барои дастрасии ҳар корбар ба маълумоти худ
+
 builder.Services.AddHttpContextAccessor();
 
-// Танзимоти CORS:
-// Агар муҳити рушд (Development) бошад, домени localhost илова мешавад,
-// агар production бошад, танҳо доменҳои воқеӣ иҷозат дода мешаванд.
+
 var allowedOrigins = new List<string>
 {
     "https://kavsaracademy.tj",

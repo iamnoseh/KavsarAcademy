@@ -25,7 +25,7 @@ public class RequestController (IRequestService service) : Controller
     }
 
     [HttpPost]
-    public async Task<Response<string>> CreateRequest([FromForm]CreateRequestDto createRequestDto)
+    public async Task<Response<string>> CreateRequest([FromBody]CreateRequestDto createRequestDto)
     {
         return await service.CreateRequestAsync(createRequestDto);
     }
