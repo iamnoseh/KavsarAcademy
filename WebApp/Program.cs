@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using AutoMapper;
 using Domain.Entities;
@@ -14,19 +17,34 @@ using Infrastructure.Seed;
 using Infrastructure.Services;
 using Infrastructure.Services.Memory;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SwaggerThemes;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Кушодани Kestrel дар портҳои 5000 ва 5001
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000); // HTTP
+    options.ListenAnyIP(5001, listenOptions =>
+    {
+        listenOptions.UseHttps(); // HTTPS бо сертификат
+    });
+});
 
 builder.Services.AddHttpContextAccessor();
 
-
+// CORS
 var allowedOrigins = new List<string>
 {
     "https://kavsaracademy.tj",
@@ -36,7 +54,6 @@ if (builder.Environment.IsDevelopment())
 {
     allowedOrigins.Add("http://localhost:5173");
 }
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -48,7 +65,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// DbContext ва сабти хизматрасонӣ барои Identity ва дигар сервисҳо
+// Сабти хидматҳо
 builder.Services.AddRegisterService(builder.Configuration);
 builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<DataContext>()
@@ -61,10 +78,9 @@ builder.Services.AddScoped<IAccountService>(sp =>
         sp.GetRequiredService<IConfiguration>(),
         builder.Environment.WebRootPath
     ));
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
 var uploadPath = builder.Configuration.GetValue<string>("UploadPath") ?? "wwwroot";
+
 builder.Services.AddScoped<IUserService>(sp =>
     new UserService(
         sp.GetRequiredService<IUserRepository>(),
@@ -121,14 +137,12 @@ builder.Services.AddScoped<IBannerService>(sp =>
     new BannerService(
         sp.GetRequiredService<IBannerRepository>(),
         builder.Environment.WebRootPath
-    )
-);
+    ));
 
-// AutoMapper ва кеш
 builder.Services.AddAutoMapper(typeof(EntityProfile));
 builder.Services.AddMemoryCache();
 
-// Танзимоти аутентификатсияи JWT
+// JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -145,7 +159,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Error"))
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key Missing"))
         )
     };
 });
@@ -157,7 +171,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
-        Description = "Введите JWT через Bearer",
+        Description = "JWT бо формати Bearer [token]",
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
@@ -171,7 +185,7 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] { }
+            Array.Empty<string>()
         }
     });
 });
@@ -180,40 +194,37 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Ислиҳоти иттилоотҳои база ва илова кардани роли ва корбарон
+// Database migration ва seed
 try
 {
     using var scope = app.Services.CreateScope();
     var serviceProvider = scope.ServiceProvider;
     var dataContext = serviceProvider.GetRequiredService<DataContext>();
     await dataContext.Database.MigrateAsync();
-    Console.WriteLine("Database migrated successfully.");
+    Console.WriteLine("Database migrated.");
     var seeder = serviceProvider.GetRequiredService<SeedData>();
     await seeder.SeedRole();
     await seeder.SeedUser();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    Console.WriteLine(e.Message);
+    Console.WriteLine($"Error: {ex.Message}");
 }
 
-// Танзимоти статикӣ
+// Static files
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")
-    ),
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
     RequestPath = ""
 });
 
-// Истифодаи CORS бо калиди "AllowFrontend"
 app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
-    {  
+    {
         c.AddThemes(app);
     });
 }
