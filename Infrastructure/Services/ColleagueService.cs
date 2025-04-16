@@ -23,7 +23,6 @@ public class ColleagueService(IColleagueRepository repository,
         {
             Id = x.Id,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
-            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Role = colleagueType.GetProperty("Role" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             ProfileImagePath = x.ImagePath,
@@ -43,7 +42,6 @@ public class ColleagueService(IColleagueRepository repository,
         {
             Id = colleague.Id,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
-            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
             Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
             ProfileImagePath = colleague.ImagePath,
@@ -63,7 +61,6 @@ public class ColleagueService(IColleagueRepository repository,
         {
             Id = colleague.Id,
             FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
-            LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(colleague).ToString(),
             About = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
             Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
             ProfileImage = colleague.ImagePath,
@@ -96,18 +93,16 @@ public class ColleagueService(IColleagueRepository repository,
 
         var colleague = new Colleague
         {
-            FirstNameTj = request.FirstNameTj,
-            LastNameTj = request.LastNameTj,
-            FirstNameRu = request.FirstNameRu,
-            LastNameRu = request.LastNameRu,
-            FirstNameEn = request.FirstNameEn,
-            LastNameEn = request.LastNameEn,
+            FullNameTj = request.FirstNameTj,
+
+            FullNameRu = request.FirstNameRu,
+ 
+            FullNameEn = request.FirstNameEn,
+   
             AbouteTj = request.AbouteTj,
             AbouteRu = request.AbouteRu,
             AbouteEn = request.AbouteEn,
             CreatedAt = DateTime.UtcNow,
-            RoleEn = request.RoleEn,
-            RoleRu = request.RoleRu,
             RoleTj = request.RoleTj,
             ImagePath = $"/uploads/Colleague/{uniqueFileName}",
             Icons = new List<string>()
@@ -152,17 +147,15 @@ public class ColleagueService(IColleagueRepository repository,
     if (colleague == null)
         return new Response<string>(HttpStatusCode.NotFound, "Colleague not found");
 
-    colleague.FirstNameTj = request.FirstNameTj;
-    colleague.LastNameTj = request.LastNameTj;
-    colleague.FirstNameRu = request.FirstNameRu;
-    colleague.LastNameRu = request.LastNameRu;
-    colleague.FirstNameEn = request.FirstNameEn;
-    colleague.LastNameEn = request.LastNameEn;
+    colleague.FullNameTj = request.FirstNameTj;
+
+    colleague.FullNameRu = request.FirstNameRu;
+
+    colleague.FullNameEn = request.FirstNameEn;
+
     colleague.AbouteTj = request.AbouteTj;
     colleague.AbouteRu = request.AbouteRu;
     colleague.AbouteEn = request.AbouteEn;
-    colleague.RoleEn = request.RoleEn;
-    colleague.RoleRu = request.RoleRu;
     colleague.RoleTj = request.RoleTj;
     
     

@@ -37,7 +37,6 @@ namespace Infrastructure.Services
                         Id = course.Colleague.Id,
                         FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(course.Colleague)
                             .ToString(),
-                        LastName = colleagueType.GetProperty("LastName" + language)?.GetValue(course.Colleague).ToString(),
                         About = colleagueType.GetProperty("Aboute" + language)?.GetValue(course.Colleague).ToString(),
                         ProfileImage = course.Colleague.ImagePath
                     }
@@ -72,7 +71,6 @@ namespace Infrastructure.Services
                         Id = course.Colleague.Id,
                         FirstName = colleagueType.GetProperty("FirstName" + language).GetValue(course.Colleague)
                             ?.ToString(),
-                        LastName = colleagueType.GetProperty("LastName" + language).GetValue(course.Colleague)?.ToString(),
                         About = colleagueType.GetProperty("Aboute" + language).GetValue(course.Colleague)?.ToString(),
                         ProfileImage = course.Colleague.ImagePath
                     }
