@@ -31,9 +31,10 @@ using SwaggerThemes;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add configuration to listen on all network interfaces
+builder.WebHost.UseUrls("http://*:5252");
 
 builder.Services.AddHttpContextAccessor();
-
 
 var allowedOrigins = new List<string>
 {
@@ -233,4 +234,5 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
+// Run the application on all interfaces
 app.Run();
