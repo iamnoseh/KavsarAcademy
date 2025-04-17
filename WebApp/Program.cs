@@ -220,10 +220,7 @@ app.UseCors("AllowFrontend");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {  
-        c.AddThemes(app);
-    });
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kavsar Academy API v1"));
 }
 
 app.UseHttpsRedirection();

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using Domain.Dtos;
 using Domain.Dtos.Colleague;
 using Domain.Entities;
@@ -35,9 +36,10 @@ namespace Infrastructure.Services
                     ? new GetColleague
                     {
                         Id = course.Colleague.Id,
-                        FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(course.Colleague)
+                        FullName = colleagueType.GetProperty("FullName" + language)?.GetValue(course.Colleague)
                             .ToString(),
                         About = colleagueType.GetProperty("Aboute" + language)?.GetValue(course.Colleague).ToString(),
+                        Summary = colleagueType.GetProperty("Summary" + language)?.GetValue(course.Colleague).ToString(),
                         ProfileImage = course.Colleague.ImagePath
                     }
                     : null,
@@ -69,9 +71,10 @@ namespace Infrastructure.Services
                     ? new GetColleague
                     {
                         Id = course.Colleague.Id,
-                        FirstName = colleagueType.GetProperty("FirstName" + language).GetValue(course.Colleague)
+                        FullName = colleagueType.GetProperty("FullName" + language).GetValue(course.Colleague)
                             ?.ToString(),
                         About = colleagueType.GetProperty("Aboute" + language).GetValue(course.Colleague)?.ToString(),
+                        Summary = colleagueType.GetProperty("Summary" + language).GetValue(course.Colleague)?.ToString(),
                         ProfileImage = course.Colleague.ImagePath
                     }
                     : null,

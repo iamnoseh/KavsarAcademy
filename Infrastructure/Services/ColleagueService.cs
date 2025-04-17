@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using Domain.Dtos.Colleague;
 using Domain.Entities;
 using Domain.Responses;
@@ -22,8 +23,9 @@ public class ColleagueService(IColleagueRepository repository,
         var dto = colleagues.Select(x => new GetColleagueWhitKnowingIcons
         {
             Id = x.Id,
-            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
+            FullName = colleagueType.GetProperty("FullName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(x)?.ToString() ?? string.Empty,
+            Summary = colleagueType.GetProperty("Summary" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Role = colleagueType.GetProperty("Role" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             ProfileImagePath = x.ImagePath,
             KnowingIcons = x.Icons.ToList()
@@ -41,9 +43,10 @@ public class ColleagueService(IColleagueRepository repository,
         var dto = new GetColleagueWhitKnowingIcons
         {
             Id = colleague.Id,
-            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
+            FullName = colleagueType.GetProperty("FullName" + language)?.GetValue(colleague).ToString(),
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
             Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
+            Summary = colleagueType.GetProperty("Summary" + language)?.GetValue(colleague).ToString(),
             ProfileImagePath = colleague.ImagePath,
             KnowingIcons = colleague.Icons.ToList()
         };
@@ -60,9 +63,10 @@ public class ColleagueService(IColleagueRepository repository,
         var dto = new GetColleague
         {
             Id = colleague.Id,
-            FirstName = colleagueType.GetProperty("FirstName" + language)?.GetValue(colleague).ToString(),
+            FullName = colleagueType.GetProperty("FullName" + language)?.GetValue(colleague).ToString(),
             About = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
             Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
+            Summary = colleagueType.GetProperty("Summary" + language).GetValue(colleague).ToString(), 
             ProfileImage = colleague.ImagePath,
         };
         return new Response<GetColleague>(dto);
@@ -93,16 +97,19 @@ public class ColleagueService(IColleagueRepository repository,
 
         var colleague = new Colleague
         {
-            FullNameTj = request.FirstNameTj,
+            FullNameTj = request.FullNameTj,
 
-            FullNameRu = request.FirstNameRu,
+            FullNameRu = request.FullNameRu,
  
-            FullNameEn = request.FirstNameEn,
+            FullNameEn = request.FullNameEn,
    
             AbouteTj = request.AbouteTj,
             AbouteRu = request.AbouteRu,
             AbouteEn = request.AbouteEn,
             CreatedAt = DateTime.UtcNow,
+            SummaryEn = request.SummaryEn,
+            SummaryTj = request.SummaryTj,
+            SummaryRu = request.SummaryRu,
             RoleTj = request.RoleTj,
             ImagePath = $"/uploads/Colleague/{uniqueFileName}",
             Icons = new List<string>()
@@ -147,15 +154,18 @@ public class ColleagueService(IColleagueRepository repository,
     if (colleague == null)
         return new Response<string>(HttpStatusCode.NotFound, "Colleague not found");
 
-    colleague.FullNameTj = request.FirstNameTj;
+    colleague.FullNameTj = request.FullNameTj;
 
-    colleague.FullNameRu = request.FirstNameRu;
+    colleague.FullNameRu = request.FullNameRu;
 
-    colleague.FullNameEn = request.FirstNameEn;
+    colleague.FullNameEn = request.FullNameEn;
 
     colleague.AbouteTj = request.AbouteTj;
     colleague.AbouteRu = request.AbouteRu;
     colleague.AbouteEn = request.AbouteEn;
+    colleague.SummaryEn = request.SummaryEn;
+    colleague.SummaryTj = request.SummaryTj;
+    colleague.SummaryRu = request.SummaryRu;
     colleague.RoleTj = request.RoleTj;
     
     

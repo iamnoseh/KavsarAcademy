@@ -15,6 +15,9 @@ public class Colleague : BaseEntity
     public string AbouteTj { get; set; }
     public string AbouteRu { get; set; }
     public string AbouteEn { get; set; }
+    public string SummaryTj { get; set; }
+    public string SummaryRu { get; set; }
+    public string SummaryEn { get; set; }
   
     public string? RoleTj { get; set; }
 
