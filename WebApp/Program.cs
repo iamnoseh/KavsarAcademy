@@ -28,8 +28,12 @@ builder.Services.AddHttpContextAccessor();
 
 var allowedOrigins = new List<string>
 {
+    "http://kavsaracademy.tj",
+    "http://www.kavsaracademy.tj",
     "https://kavsaracademy.tj",
-    "https://www.kavsaracademy.tj"
+    "https://www.kavsaracademy.tj",
+    "http://37.27.249.153:5173", 
+    "http://localhost:5173"
 };
 if (builder.Environment.IsDevelopment())
 {
@@ -196,7 +200,7 @@ catch (Exception e)
     Console.WriteLine(e.Message);
 }
 
-// Танзимоти статикӣ
+
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
