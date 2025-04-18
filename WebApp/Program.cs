@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using AutoMapper;
 using Domain.Entities;
@@ -17,22 +14,15 @@ using Infrastructure.Seed;
 using Infrastructure.Services;
 using Infrastructure.Services.Memory;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SwaggerThemes;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add configuration to listen on all network interfaces
-builder.WebHost.UseUrls("http://*:5252");
 
 builder.Services.AddHttpContextAccessor();
 
@@ -57,7 +47,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// DbContext ва сабти хизматрасонӣ барои Identity ва дигар сервисҳо
+
 builder.Services.AddRegisterService(builder.Configuration);
 builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<DataContext>()
@@ -133,11 +123,11 @@ builder.Services.AddScoped<IBannerService>(sp =>
     )
 );
 
-// AutoMapper ва кеш
+
 builder.Services.AddAutoMapper(typeof(EntityProfile));
 builder.Services.AddMemoryCache();
 
-// Танзимоти аутентификатсияи JWT
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -189,7 +179,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Ислиҳоти иттилоотҳои база ва илова кардани роли ва корбарон
+
 try
 {
     using var scope = app.Services.CreateScope();
@@ -215,7 +205,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = ""
 });
 
-// Истифодаи CORS бо калиди "AllowFrontend"
+
 app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
@@ -234,5 +224,5 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-// Run the application on all interfaces
+
 app.Run();
