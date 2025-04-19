@@ -12,7 +12,7 @@ namespace Infrastructure.Services
     public class ChooseUsService(IChooseUsRepository chooseUsRepository, 
         IMapper mapper, string uploadPath ): IChooseUsService
     {
-        private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private readonly string[] _allowedExtensions =[".jpg", ".jpeg", ".png", ".gif",".svg"];
         private const long MaxFileSize = 10 * 1024 * 1024; // 10MB
 
         public async Task<Response<List<GetChooseUsDto>>> GetChooseUsAsync(string language = "En")

@@ -10,7 +10,7 @@ namespace Infrastructure.Services;
 public class ColleagueService(IColleagueRepository repository, 
     string uploadPath) : IColleagueService
 {
-    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif",".svg"];
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB
     public async Task<Response<List<GetColleagueWhitKnowingIcons>>> GetColleaguesWithKnowingIcons(string language = "En")
     {

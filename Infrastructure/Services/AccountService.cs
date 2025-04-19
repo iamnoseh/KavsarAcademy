@@ -20,7 +20,7 @@ namespace Infrastructure.Services
         IConfiguration configuration,
         string uploadPath) : IAccountService
     {
-        private readonly string[] _allowedImageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+        private readonly string[] _allowedImageExtensions = [".jpg", ".jpeg", ".png", ".gif",".svg"];
         private const long MaxImageSize = 10 * 1024 * 1024; // 10MB
 
         public async Task<Response<string>> Register(RegisterDto model)

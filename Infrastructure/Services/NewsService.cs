@@ -14,7 +14,7 @@ public class NewsService : INewsService
     private readonly IRedisMemoryCache memoryCache;
     private readonly string uploadPath;
     private readonly HtmlSanitizer sanitizer;
-    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif",".svg"];
     private const long MaxFileSize = 100 * 1024 * 1024;
     private const string Key = "news";
     private readonly string[] supportedLanguages = { "Tj", "Ru", "En" };

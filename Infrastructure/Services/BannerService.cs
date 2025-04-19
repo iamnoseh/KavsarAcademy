@@ -11,7 +11,7 @@ public class BannerService(
     IBannerRepository bannerRepository,
     string uploadPath) : IBannerService
 {
-    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif",".svg"];
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB 
 
     #region GetAllBanners

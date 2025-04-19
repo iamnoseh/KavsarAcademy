@@ -12,7 +12,7 @@ namespace Infrastructure.Services
         ICourseRepository courseRepository,
         string uploadPath) : ICourseService
     {
-        private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+        private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif",".svg"];
         private const long MaxFileSize = 10 * 1024 * 1024;
 
         public async Task<Response<List<GetCourseDto>>> GetCoursesAsync(string language = "En")
