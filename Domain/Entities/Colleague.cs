@@ -19,7 +19,7 @@ public class Colleague : BaseEntity
     public string SummaryRu { get; set; }
     public string SummaryEn { get; set; }
   
-    public string? RoleTj { get; set; }
+    public string Role { get; set; }
 
     public string ImagePath { get; set; }
     [NotMapped]

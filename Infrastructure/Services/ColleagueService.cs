@@ -26,7 +26,7 @@ public class ColleagueService(IColleagueRepository repository,
             FullName = colleagueType.GetProperty("FullName" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(x)?.ToString() ?? string.Empty,
             Summary = colleagueType.GetProperty("Summary" + language)?.GetValue(x)?.ToString() ?? string.Empty,
-            Role = colleagueType.GetProperty("Role" + language)?.GetValue(x)?.ToString() ?? string.Empty,
+            Role = x.Role,
             ProfileImagePath = x.ImagePath,
             KnowingIcons = x.Icons.ToList()
         }).ToList();
@@ -45,7 +45,7 @@ public class ColleagueService(IColleagueRepository repository,
             Id = colleague.Id,
             FullName = colleagueType.GetProperty("FullName" + language)?.GetValue(colleague).ToString(),
             Aboute = colleagueType.GetProperty("Aboute" + language)?.GetValue(colleague).ToString(),
-            Role = colleagueType.GetProperty("Role" + language)?.GetValue(colleague).ToString(),
+            Role = colleague.Role,
             Summary = colleagueType.GetProperty("Summary" + language)?.GetValue(colleague).ToString(),
             ProfileImagePath = colleague.ImagePath,
             KnowingIcons = colleague.Icons.ToList()
@@ -110,7 +110,7 @@ public class ColleagueService(IColleagueRepository repository,
             SummaryEn = request.SummaryEn,
             SummaryTj = request.SummaryTj,
             SummaryRu = request.SummaryRu,
-            RoleTj = request.RoleTj,
+            Role = request.RoleTj,
             ImagePath = $"/uploads/Colleague/{uniqueFileName}",
             Icons = new List<string>()
         };
@@ -166,7 +166,7 @@ public class ColleagueService(IColleagueRepository repository,
     colleague.SummaryEn = request.SummaryEn;
     colleague.SummaryTj = request.SummaryTj;
     colleague.SummaryRu = request.SummaryRu;
-    colleague.RoleTj = request.RoleTj;
+    colleague.Role = request.RoleTj;
     
     
     if (request.ProfileImage != null && request.ProfileImage.Length > 0)

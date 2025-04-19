@@ -1,13 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-
 namespace Infrastructure.ExtensionMethods;
 
 public static class SwaggerExtensions
 {
-    /// <summary>
-    /// Добавляет и настраивает Swagger для API
-    /// </summary>
+
     public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
@@ -18,8 +15,6 @@ public static class SwaggerExtensions
                 Version = "v1",
                 Description = "API для системы управления курсами Kavsar Academy"
             });
-            
-            // Добавление поддержки JWT авторизации в Swagger
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Authorization",

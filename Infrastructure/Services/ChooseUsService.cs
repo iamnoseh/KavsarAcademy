@@ -2,8 +2,6 @@ using System.Net;
 using AutoMapper;
 using Domain.Dtos;
 using Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using Domain.Entities;
 using Domain.Responses;
 
